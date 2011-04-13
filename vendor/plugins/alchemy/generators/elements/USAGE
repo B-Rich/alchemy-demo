@@ -1,0 +1,2 @@
+this is the Alchemy element partials generator
+it generates the editor and view partials for the elements defined in config/alchemy/elements.yml

@@ -1,0 +1,10 @@
+.DS_Store
+config/database.yml
+tmp/**/*
+log/**/*
+index
+uploads/**/*
+public/javascripts/alchemy
+public/stylesheets/alchemy
+public/images/alchemy
+db/migrate
