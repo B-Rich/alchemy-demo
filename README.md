@@ -17,9 +17,10 @@ Credentials:
 ------------
 
 Username: demo
+
 Password: demo
 
 Download Alchemy:
 -----------------
 
-<http://magiclabs.github.com/alchemy/>
+<https://github.com/magiclabs/alchemy/>

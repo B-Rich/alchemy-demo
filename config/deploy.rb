@@ -17,10 +17,6 @@ role :db,  "rv2.nethosting4you-server.de", :primary => true
 set :deploy_to, "/var/www/#{user}/html/#{application}"
 ssh_options[:port] = 12312
 
-after "deploy:symlink", "deploy:db:symlink"
-before "deploy:restart", "deploy:migrate"
-before "deploy:restart", "deploy:seed"
-
 after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
 
 # Alchemy recipes from vendor/plugins/alchemy/recipes/alchemy_capistrano_tasks.rb
@@ -32,6 +28,10 @@ after "deploy:setup", "alchemy:shared_folders:create"
 after "deploy:symlink", "alchemy:shared_folders:symlink"
 
 # Custom tasks
+
+after "deploy:symlink", "deploy:db:symlink"
+before "deploy:restart", "deploy:migrate"
+before "deploy:restart", "deploy:seed"
 
 namespace :deploy do
   
