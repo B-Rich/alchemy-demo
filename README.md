@@ -16,8 +16,8 @@ Admin Login:
 Credentials:
 ------------
 
-Username: admin
-Password: S3cr3t
+Username: demo
+Password: demo
 
 Download Alchemy:
 -----------------

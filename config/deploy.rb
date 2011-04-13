@@ -3,20 +3,22 @@ set :repository,  "git://github.com/magiclabs/#{application}.git"
 
 set :scm, :git
 
-role :web, "alchemy-app.com"
-role :app, "alchemy-app.com"
-role :db,  "alchemy-app.com", :primary => true
-
-set :deploy_to, "/var/www/web1/html/demo"
-ssh_options[:port] = 12312
-
 set(:user) { Capistrano::CLI.ui.ask("Type in the ssh username: ") }
 set(:password) { Capistrano::CLI.password_prompt("Type in the password for #{user}: ") }
 set :use_sudo, false
 
-after "deploy:symlink", :symlink_database_yml
+role :web, "rv2.nethosting4you-server.de"
+role :app, "rv2.nethosting4you-server.de"
+role :db,  "rv2.nethosting4you-server.de", :primary => true
+
+set :deploy_to, "/var/www/#{user}/html/#{application}"
+ssh_options[:port] = 12312
+
+after "deploy:symlink", "deploy:db:symlink"
 before "deploy:restart", "deploy:migrate"
 before "deploy:restart", "deploy:seed"
+
+after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
 
 # Alchemy recipes from vendor/plugins/alchemy/recipes/alchemy_capistrano_tasks.rb
 
@@ -27,11 +29,6 @@ after "deploy:setup", "alchemy:shared_folders:create"
 after "deploy:symlink", "alchemy:shared_folders:symlink"
 
 # Custom tasks
-
-desc "Symlinks the database.yml"
-task :symlink_database_yml do
-  run "ln -nfs #{shared_path}/config/database.yml #{current_path}/config/database.yml"
-end
 
 namespace :deploy do
   
@@ -45,6 +42,56 @@ namespace :deploy do
   desc 'Seeds the database'
   task :seed, :roles => :app, :except => { :no_release => true } do
     run "cd #{release_path} && RAILS_ENV=production rake db:seed"
+  end
+  
+  namespace :db do
+    
+    desc <<-DESC
+      Creates the database.yml configuration file in shared path.
+
+      By default, this task uses a template unless a template \
+      called database.yml.erb is found either is :template_dir \
+      or /config/deploy folders. The default template matches \
+      the template for config/database.yml file shipped with Rails.
+
+      When this recipe is loaded, db:setup is automatically configured \
+      to be invoked after deploy:setup. You can skip this task setting \
+      the variable :skip_db_setup to true. This is especially useful \ 
+      if you are using this recipe in combination with \
+      capistrano-ext/multistaging to avoid multiple db:setup calls \ 
+      when running deploy:setup for all stages one by one.
+    DESC
+    
+    task :setup, :except => { :no_release => true } do
+      
+      default_template = <<-EOF
+      production:
+        adapter: mysql
+        encoding: utf8
+        reconnect: false
+        pool: 5
+        database: #{ Capistrano::CLI.ui.ask("Database name: ") }
+        username: #{ Capistrano::CLI.ui.ask("Database username: ") }
+        password: #{ Capistrano::CLI.ui.ask("Database password: ") }
+        socket: #{ Capistrano::CLI.ui.ask("Database socket: ") }
+      EOF
+      
+      location = fetch(:template_dir, "config/deploy") + '/database.yml.erb'
+      template = File.file?(location) ? File.read(location) : default_template
+      
+      config = ERB.new(template)
+      
+      run "mkdir -p #{shared_path}/config" 
+      put config.result(binding), "#{shared_path}/config/database.yml"
+    end
+    
+    desc <<-DESC
+      [internal] Updates the symlink for database.yml file to the just deployed release.
+    DESC
+    task :symlink, :except => { :no_release => true } do
+      run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml" 
+    end
+    
   end
   
 end
