@@ -3,6 +3,9 @@ set :repository,  "git://github.com/magiclabs/#{application}.git"
 
 set :scm, :git
 
+set :deploy_via, :remote_cache
+set :copy_exclude, [".svn", ".DS_Store"]
+
 set(:user) { Capistrano::CLI.ui.ask("Type in the ssh username: ") }
 set(:password) { Capistrano::CLI.password_prompt("Type in the password for #{user}: ") }
 set :use_sudo, false
