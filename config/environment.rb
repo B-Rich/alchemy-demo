@@ -23,5 +23,5 @@ Rails::Initializer.run do |config|
   config.autoload_paths += %W( vendor/plugins/alchemy/app/middleware )
   config.time_zone = 'Berlin'
   config.i18n.load_path += Dir[Rails.root.join('vendor', 'plugins', 'alchemy', 'config', 'locales', '*.{rb,yml}')]
-  config.i18n.default_locale = :de
+  config.i18n.default_locale = :en
 end

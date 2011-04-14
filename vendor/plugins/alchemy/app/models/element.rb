@@ -7,7 +7,6 @@ class Element < ActiveRecord::Base
   belongs_to :page
   has_and_belongs_to_many :to_be_sweeped_pages, :class_name => 'Page', :uniq => true
   
-  validates_uniqueness_of :position, :scope => :page_id
   validates_presence_of :name, :on => :create, :message => N_("Please choose an element.")
   
   before_destroy :remove_contents
