@@ -1,10 +1,7 @@
 <div class="bild_text" id="<%= element_dom_id(element) %>" <%= element_preview_code(element) -%>>
-    <div class="bild_text_images">
-        <%- element.contents.find_all_by_essence_type("EssencePicture").each do |content| -%>
-        <div class="bild_text_image <%= content.essence.css_class %>">
-            <%= render_essence_view(content, :image_size => "160x120") %>
-        </div>
-        <%- end -%>
+    <%- a = element.contents.find_by_essence_type("EssencePicture") -%>
+    <div class="image <%= a.essence.css_class %>">
+        <%= render_essence_view(a, :image_size => "450x300", :crop => true) %>
     </div>
     <div class="text">
         <%= render_essence_view_by_name(element, 'text') %>
