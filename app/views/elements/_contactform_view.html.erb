@@ -1,0 +1,14 @@
+<div class="contactform" id="<%= element_dom_id(element) %>" <%= element_preview_code(element) -%>>
+    <div class="mail_from">
+        <%= render_essence_view_by_name(element, 'mail_from') %>
+    </div>
+    <div class="mail_to">
+        <%= render_essence_view_by_name(element, 'mail_to') %>
+    </div>
+    <div class="subject">
+        <%= render_essence_view_by_name(element, 'subject') %>
+    </div>
+    <div class="success_page">
+        <%= render_essence_view_by_name(element, 'success_page') %>
+    </div>
+</div>
