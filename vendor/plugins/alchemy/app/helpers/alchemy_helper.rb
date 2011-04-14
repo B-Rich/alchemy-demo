@@ -486,7 +486,7 @@ module AlchemyHelper
         css_class.blank? ? css_class = "first" : css_class = [css_class, "last"].join(" ")
       end
       if multi_language? 
-        url = show_page_with_language_url(:urlname => urlname, :lang => Alchemy::Controller.current_language.code)
+        url = show_page_with_language_url(:urlname => urlname, :lang => page.language_code)
       else
         url = show_page_url(:urlname => urlname)
       end
@@ -494,7 +494,7 @@ module AlchemyHelper
     end
     bc.join(options[:seperator])
   end
-
+  
   # returns true if page is in the active branch
   def page_active? page
     @breadcrumb ||= breadcrumb(@page)

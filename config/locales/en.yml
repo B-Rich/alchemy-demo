@@ -8,6 +8,29 @@ en:
   search:
     no_results: 'No results found'
     result_heading: 'Your search for %{query} has %{count} results'
+
+  contactform:
+    labels:
+      salutation: 'Salutation'
+      choose: 'Please choose'
+      mr: 'Mr.'
+      mrs: 'Mrs.'
+      firstname: 'Firstname'
+      lastname: 'Lastname'
+      address: 'Street / No.'
+      zip: 'Zipcode / City'
+      phone: 'Telephone'
+      email: 'Email'
+      message: 'Message'
+      send: 'Send Message'
+      mandatory_fields: 'Mandatory fields.'
+      success_page: 'Followup page'
+    validations:
+      enter_name: 'Please enter your name'
+      enter_mail: 'Please enter your email'
+      wrong_email_format: 'Email has wrong format.'
+    messages:
+      success: 'Your message was delivered succesfully.'
   
   languages:
     cn:
