@@ -33,6 +33,18 @@ after "deploy:symlink", "deploy:db:symlink"
 before "deploy:restart", "deploy:migrate"
 before "deploy:restart", "deploy:seed"
 
+namespace :logs do
+  desc "show last 50 lines of production.log"
+  task :tail do
+    run "tail -n50 #{shared_path}/log/production.log"
+  end
+
+  desc "watch tail of production.log and wait for additional data to be appended to the input"
+  task :watch do
+    stream("tail -f #{shared_path}/log/production.log")
+  end
+end
+
 namespace :deploy do
   
   task :start do ; end
