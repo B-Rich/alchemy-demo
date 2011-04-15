@@ -1,7 +1,8 @@
+<%- cache(content) do -%>
 <div class="content_editor" id="<%= content_dom_id(content) %>">
-
+	
 	<%- if !content.settings.blank? && content.settings[:display_as] == "checkbox" -%>
-
+	
 	<%= check_box_tag(
 	    "contents[content_#{content.id}][body]",
 	    "1",
@@ -16,6 +17,9 @@
 	<%- elsif !content.settings.blank? && content.settings[:display_as] == "select" -%>
 
 	<label><%= render_content_name(content) %></label>
+	<%- if options[:select_values].blank? -%>
+	<%= warning('options[:select_values] is nil', "No select values given. Please provide :select_values as argument to render_essence_editor_by_name() helper inside this element editor view.") %>
+	<%- else -%>
 	<%- if options[:select_values].is_a?(Hash)
 	        options_method = grouped_options_for_select(
 	            options[:select_values],
@@ -36,23 +40,24 @@
 	        :class => "essence_editor_select full_width"
 	    }
 	) %>
+	<%- end -%>
 
 	<%- else -%>
 
 	<label>
 		<%= render_content_name(content) %>
-	    <%= link_to_confirmation_window(
-	        render_icon('delete-small'),
-	        _('Do you really want to delete this content?'),
-	        content_path(content),
-	        :class => 'icon_button small',
-	        :title => _('Remove this content')
-	    ) if !content.settings.blank? && content.settings[:deletable] %>
+		<%= link_to_confirmation_window(
+			render_icon('delete-small'),
+			_('Do you really want to delete this content?'),
+			content_path(content),
+			:class => 'icon_button small',
+			:title => _('Remove this content')
+		) if !content.settings.blank? && content.settings[:deletable] %>
 	</label>
 	<%= text_field_tag(
 	    "contents[content_#{content.id}][body]",
 	    content.essence.body,
-	    :class => "thin_border #{!content.settings.blank? && content.settings[:linkable] ? 'text_with_icon' : 'auto_resize'}",
+	    :class => "thin_border auto_resize#{!content.settings.blank? && content.settings[:linkable] ? ' text_with_icon' : ''}",
 	    :id => "contents_#{content.id}_content"
 	) %>
 
@@ -77,3 +82,4 @@
 	<%- end -%>
 
 </div>
+<%- end -%>

@@ -78,6 +78,12 @@ div#flash_notices div.flash.error {
 }
 
 div#flash_notices div.flash.info {
+	border-color: #8392b5;
+	color: #233772;
+	background-color: #cadbf3;
+}
+
+div#flash_notices div.flash.warn {
 	border-color: #c4c19c;
 	color: #726d23;
 	background-color: #f3f0c1;
@@ -517,6 +523,7 @@ div.info {
 	border-radius: 3px;
 	background-color: #eaf4f9;
 	position: relative;
+	margin-bottom: 8px;
 }
 
 div.info.footnote {
@@ -1278,9 +1285,10 @@ div#user_list_legend {
 	text-align: center;
 }
 
-div.button_with_label form {
-	margin: 0;
+#toolbar div.button_with_label form {
 	float: none;
+	margin: 0;
+	display: inline-block;
 }
 
 #toolbar div.search_field {
@@ -1449,7 +1457,7 @@ span.icon.sort {
 	background-position: -64px -104px;
 }
 
-#page_sorting_notice p {
+#page_sorting_panel p {
 	margin-top: 1em;
 }
 
@@ -1725,7 +1733,8 @@ input#search_input_field {
 }
 
 input.button, 
-a.button {
+a.button,
+button.button {
 	margin: 0;
 	font: 11px "Lucida Grande", "Lucida Sans", Lucida, sans-serif;
 	border: 1px solid #9a9a9a;
@@ -1748,14 +1757,41 @@ input.button {
 	height: 25px;
 }
 
-#new_page_form tbody tr td.second_row input.button {
+button.button {
+	line-height: 21px;
+	padding: 1px 8px 2px 8px;
+	height: 25px;
+	font-size: 1em;
+}
+
+button.button img {
+	margin-right: 0;
+	width: 20px;
+	height: 20px;
+}
+
+button.button.disabled,
+button.button.disabled:hover,
+button.button.disabled:active {
+	color: #333;
+	text-shadow: none;
+	border-color: #ccc;
+	cursor: default;
+	background-image: none;
+	background-color: #f5f5f5;
+	padding: 1px 0 0;
+}
+
+#new_page_form tbody tr td.second_row .button {
 	float: right;
 }
 
 input.button:hover,
 input.button:focus,
 a.button:hover,
-a.button:focus {
+a.button:focus,
+button.button:hover,
+button.button:focus {
 	text-decoration: none;
 	text-shadow: none;
 	border: 1px solid #888888;
@@ -2249,6 +2285,10 @@ span.icon.settings {
 	background: url(/images/alchemy/icons.png) -160px -24px;
 }
 
+span.icon.visit_page {
+	background: url(/images/alchemy/icons.png) -64px -88px;
+}
+
 span.icon.upload {
 	background: url(/images/alchemy/icons.png) 0 -72px;
 }
@@ -2305,6 +2345,10 @@ span.icon.flush {
 	background-position: -176px -24px;
 }
 
+span.icon.publish {
+	background-position: -80px -88px;
+}
+
 span.icon.info {
 	background-position: -32px -88px;
 }
@@ -2346,7 +2390,7 @@ span.icon.false {
 	background-image: none;
 }
 
-span.icon.warning {
+span.icon.warning, span.icon.warn {
 	background-position: 0 -88px;
 }
 
@@ -2376,6 +2420,14 @@ span.icon.clipboard {
 
 span.icon.clipboard.full {
 	background-position: -160px -56px;
+}
+
+span.icon.trash {
+	background-position: -176px -56px;
+}
+
+span.icon.trash.full {
+	background-position: -192px -56px;
 }
 
 a.icon.file_download {
@@ -2601,6 +2653,7 @@ div.button_with_label {
 	margin-right: 8px;
 	margin-left: 8px;
 	float: left;
+	min-width: 70px;
 }
 
 div.button_with_label.active .icon_button {
@@ -3382,24 +3435,12 @@ div.info ol li {
 }
 
 div#overlay_toolbar {
-	margin: -8px -8px 4px;
-	padding: 6px 8px 8px;
 	background: #e3e3e3 url(/images/alchemy/gui/shading.png) repeat-x 0 -42px;
 	border: 1px solid #afafaf;
 	height: 38px;
 	border-left-style: none;
 	border-right-style: none;
-}
-
-#alchemyElementWindow div#overlay_toolbar {
-	padding: 6px 0 4px;
-	height: 44px;
-	border-right-style: none;
-	border-left-style: none;
-	position: fixed;
-	z-index: 10;
-	width: 422px;
-	margin: -57px 0 0;
+	padding: 8px;
 }
 
 #overlay_toolbar div.js_filter_field_box {

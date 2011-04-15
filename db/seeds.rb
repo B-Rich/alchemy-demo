@@ -1,2 +1,2 @@
 # Seed Alchemy content
-Alchemy::Seeder.seed!
+Alchemy::Seeder.upgrade!

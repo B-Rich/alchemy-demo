@@ -21,6 +21,7 @@ class Content < ActiveRecord::Base
       }
     else
       description = element.content_description_for(essences_hash[:name])
+      description = element.available_content_description_for(essences_hash[:name]) if description.blank?
     end
     raise "No description found in elements.yml for #{essences_hash.inspect} and #{element.inspect}" if description.blank?
     essence_class = ObjectSpace.const_get(description['type'])
@@ -81,9 +82,24 @@ class Content < ActiveRecord::Base
     self.essence.ingredient
   end
   
-  # Calles self.essence.save_ingredient. Called from ElementController#update for each content in element.
-  def save_content(params, options = {})
-    self.essence.save_ingredient(params, options)
+  # Calls essence.save_ingredient. Called from ElementController#update for each content in element.
+  # Adding errors if essence validation fails.
+  def save_essence(params, options = {})
+    if essence.save_ingredient(params, options)
+      return true
+    else
+      errors.add(:base, :essence_validation_failed)
+      return false
+    end
+  end
+  
+  def essence_validation_failed?
+    !essence.essence_errors.blank?
+  end
+  
+  def has_validations?
+    return false if description.blank?
+    !description['validate'].blank?
   end
   
 end

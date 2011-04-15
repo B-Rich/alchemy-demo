@@ -5,9 +5,9 @@ class Admin::PagesController < AlchemyController
   layout 'alchemy'
   
   before_filter :set_translation, :except => [:show]
-  before_filter :get_page_from_id, :only => [:show, :unlock, :publish, :configure, :edit, :update, :destroy, :fold]
+  before_filter :get_page_from_id, :only => [:show, :unlock, :visit, :publish, :configure, :edit, :update, :destroy, :fold]
   
-  filter_access_to [:show, :unlock, :publish, :configure, :edit, :update, :destroy], :attribute_check => true
+  filter_access_to [:show, :unlock, :visit, :publish, :configure, :edit, :update, :destroy], :attribute_check => true
   filter_access_to [:index, :link, :layoutpages, :new, :switch_language, :create, :fold, :move, :flush], :attribute_check => false
   
   cache_sweeper :pages_sweeper, :only => [:publish], :if => Proc.new { |c| Alchemy::Configuration.parameter(:cache_pages) }
@@ -52,7 +52,7 @@ class Admin::PagesController < AlchemyController
     if page.valid? && parent
       page.move_to_child_of(parent)
     end
-    render_errors_or_redirect(page, parent.layoutpage? ? layoutpages_admin_pages_path : admin_pages_path, _("page '%{name}' created.") % {:name => page.name})
+    render_errors_or_redirect(page, parent.layoutpage? ? layoutpages_admin_pages_path : admin_pages_path, _("page '%{name}' created.") % {:name => page.name}, 'form#new_page_form button.button')
   rescue Exception => e
     exception_handler(e)
   end
@@ -81,8 +81,11 @@ class Admin::PagesController < AlchemyController
   
   def update
     # fetching page via before filter
-    @page.update_attributes(params[:page])
-    @notice = _("Page %{name} saved") % {:name => @page.name}
+    if @page.update_attributes(params[:page])
+      @notice = _("Page %{name} saved") % {:name => @page.name}
+    else
+      render_remote_errors(@page, "form#edit_page_#{@page.id} button.button")
+    end
   end
   
   def destroy
@@ -168,6 +171,11 @@ class Admin::PagesController < AlchemyController
         redirect_to(params[:redirect_to])
       end
     end
+  end
+  
+  def visit
+    @page.unlock
+    redirect_to multi_language? ? show_page_with_language_path(:lang => @page.language_code, :urlname => @page.urlname) : show_page_path(@page.urlname)
   end
   
   # Sweeps the page cache

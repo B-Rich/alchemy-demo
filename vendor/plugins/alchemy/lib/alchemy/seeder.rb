@@ -1,5 +1,6 @@
 module Alchemy
   class Seeder
+    require 'yaml'
     
     # This seed builds the necessary page structure for alchemy in your db.
     # Put Alchemy::Seeder.seed! inside your db/seeds.rb file and run it with rake db:seed.

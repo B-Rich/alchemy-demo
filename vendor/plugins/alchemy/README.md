@@ -42,7 +42,7 @@ If you want to install Alchemy inside an existing Rails project, then follow the
         config.gem 'declarative_authorization', :version => '>=0.4.1'
         config.gem "fleximage", :version => ">=1.0.4"
         config.gem 'fast_gettext', :version => '>=0.4.8'
-        config.gem 'gettext_i18n_rails', :version => '0.2.3'
+        config.gem 'gettext_i18n_rails', :version => '0.2.13'
         config.gem 'gettext', :lib => false, :version => '>=1.9.3'
         config.gem 'rmagick', :lib => "RMagick2", :version => '>=2.12.2'
         config.gem 'jk-ferret', :version => '>=0.11.8.2', :lib => 'ferret'
@@ -58,7 +58,7 @@ If you want to install Alchemy inside an existing Rails project, then follow the
         script/plugin install git://github.com/technoweenie/attachment_fu.git
         script/plugin install git://github.com/iain/i18n_label.git
         script/plugin install git://github.com/aaronchi/jrails.git
-        script/plugin install git://github.com/trevorrowe/tinymce_hammer.git
+        script/plugin install git://github.com/tvdeyen/tinymce_hammer.git
         script/plugin install git://github.com/delynn/userstamp.git
 
 4. Then create your database and migrate:
@@ -78,23 +78,30 @@ If you want to install Alchemy inside an existing Rails project, then follow the
 
         rake alchemy:assets:copy:all
 
-Tip
----
+A few hints for the beginning
+-----------------------------
 
-If you use the ferret full text search (enabled by default), then please add a job to your crontab that reindexes the ferret index.
+1. This task creates all necessary folders and files needed for creating your own pagelayouts and elements for your website
 
-Example:
+        rake alchemy:app_structure:create:all
+
+2. If you use the ferret full text search (enabled by default), then please add a job to your crontab that reindexes the ferret index.
 
         cd /path/to/your/alchemy && RAILS_ENV=production rake ferret:rebuild_index
+
+3. You can easily create your element-files (for view and editor) depending on the elements.yml with this generator
+
+        script/generate elements
 
 Resources
 ---------
 
-* Homepage: <http://magiclabs.github.com/alchemy/>
-* Issue-Tracker: <http://alchemy.lighthouseapp.com/projects/73309-alchemy-cms>
-* Wiki: <https://github.com/magiclabs/alchemy/wiki>
-* Sourcecode: <https://github.com/magiclabs/alchemy>
+* Homepage: <http://alchemy-app.com>
 * Live-Demo: <http://demo.alchemy-app.com>
+* Wiki: <http://wiki.alchemy-app.com>
+* API Documentation: <http://api.alchemy-app.com>
+* Issue-Tracker: <http://issues.alchemy-app.com>
+* Sourcecode: <http://source.alchemy-app.com>
 
 Authors
 ---------

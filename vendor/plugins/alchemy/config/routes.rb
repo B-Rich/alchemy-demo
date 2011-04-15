@@ -9,7 +9,19 @@ ActionController::Routing::Routes.draw do |map|
   map.namespace :admin do |admin|
     admin.resources :users
     admin.resources :contents, :collection => {:order => :post}
-    admin.resources :elements, :has_many => :contents, :shallow => true, :collection => {:list => :get, :order => :post}, :member => {:fold => :post}
+    admin.resources(
+      :elements,
+      :has_many => :contents,
+      :shallow => true,
+      :collection => {
+        :list => :get, 
+        :order => :post
+      }, 
+      :member => {
+        :fold => :post,
+        :trash => :delete
+      }
+    )
     admin.resources(
       :pages,
       :collection => {
@@ -25,7 +37,8 @@ ActionController::Routing::Routes.draw do |map|
         :publish => :post,
         :unlock => :post,
         :configure => :get,
-        :preview => :get
+        :preview => :get,
+        :visit => :post
       },
       :has_many => [:elements],
       :shallow => true
@@ -56,6 +69,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :essence_videos
     admin.resources :languages
     admin.resources :clipboard, :only => :index, :collection => {:clear => :delete, :insert => :post, :remove => :delete}
+    admin.resources :trash, :only => [:index], :collection => {:clear => :delete}
   end
   map.resources :user_sessions
   map.resources :elements, :only => :show
