@@ -34,9 +34,9 @@ before "deploy:restart", "deploy:migrate"
 before "deploy:restart", "deploy:seed"
 
 namespace :logs do
-  desc "show last 50 lines of production.log"
+  desc "show last 100 lines of production.log"
   task :tail do
-    run "tail -n50 #{shared_path}/log/production.log"
+    run "tail -n100 #{shared_path}/log/production.log"
   end
 
   desc "watch tail of production.log and wait for additional data to be appended to the input"
