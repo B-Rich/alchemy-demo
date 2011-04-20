@@ -82,6 +82,7 @@ div#language_select {
 #page {
 	width: 900px;
 	margin: 0 auto;
+	position: relative;
 }
 
 #breadcrump a {
@@ -130,11 +131,10 @@ div#header_image {
 #navigation {
 	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #fdfdfd;
-	position: relative;
-	top: 40%;
+	position: absolute;
 	text-transform: uppercase;
-	float: left;
-	clear: both;
+	top: 215px;
+	z-index: 100;
 }
 
 #navigation ul {
