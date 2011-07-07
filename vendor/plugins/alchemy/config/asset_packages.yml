@@ -1,8 +1,8 @@
 --- 
 javascripts:
 - combined:
-  - alchemy/jquery-1.5.2.min
-  - alchemy/jquery-ui-1.8.11.custom.min
+  - alchemy/jquery
+  - alchemy/jquery-ui
   - alchemy/jquery.dialogextend.min
   - alchemy/jquery.in-place-edit.js
   - alchemy/jquery.Jcrop.min
@@ -11,13 +11,12 @@ javascripts:
   - alchemy/jquery.ui.nestedSortable
   - alchemy/jquery.ui.tabspaging
   - alchemy/alchemy
+  - alchemy/alchemy.element_editor_selector
+  - alchemy/alchemy.page_sorter
   - alchemy/swfupload/swfupload
   - alchemy/swfupload/queue
   - alchemy/swfupload/handlers
   - alchemy/swfupload/fileprogress
-- preview:
-  - alchemy/jquery-1.5.2.min
-  - alchemy/alchemy
 
 stylesheets:
 - combined:

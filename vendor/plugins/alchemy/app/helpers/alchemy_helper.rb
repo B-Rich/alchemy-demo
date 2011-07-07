@@ -106,20 +106,20 @@ module AlchemyHelper
   # This helper renders the Element partial for either the view or the editor part.
   # Generate element partials with ./script/generate elements
   def render_element(element, part = :view, options = {}, i = 1)
-    if element.blank?
-      warning('Element is nil')
-      render :partial => "elements/#{part}_not_found", :locals => {:name => 'nil'}
-    else
-      default_options = {
-        :shorten_to => nil,
-        :render_format => "html"
-      }
-      options = default_options.merge(options)
-      element.store_page(@page) if part == :view
-      path1 = "#{RAILS_ROOT}/app/views/elements/"
-      path2 = "#{RAILS_ROOT}/vendor/plugins/alchemy/app/views/elements/"
-      partial_name = "_#{element.name.underscore}_#{part}.html.erb"
-      if File.exists?(path1 + partial_name) || File.exists?(path2 + partial_name)
+    begin
+      if element.blank?
+        warning('Element is nil')
+        render :partial => "elements/#{part}_not_found", :locals => {:name => 'nil'}
+      else
+        default_options = {
+          :shorten_to => nil,
+          :render_format => "html"
+        }
+        options = default_options.merge(options)
+        element.store_page(@page) if part == :view
+        path1 = "#{RAILS_ROOT}/app/views/elements/"
+        path2 = "#{RAILS_ROOT}/vendor/plugins/alchemy/app/views/elements/"
+        partial_name = "_#{element.name.underscore}_#{part}.html.erb"
         locals = options.delete(:locals)
         render(
           :partial => "elements/#{element.name.underscore}_#{part}.#{options[:render_format]}.erb",
@@ -129,17 +129,17 @@ module AlchemyHelper
             :counter => i
           }.merge(locals || {})
         )
-      else
-        warning(%(
-          Element #{part} partial not found for #{element.name}.\n
-          Looking for #{partial_name}, but not found
-          neither in #{path1}
-          nor in #{path2}
-          Use ./script/generate elements to generate them.
-          Maybe you still have old style partial names? (like .rhtml). Then please rename them in .html.erb'
-        ))
-        render :partial => "elements/#{part}_not_found", :locals => {:name => element.name, :error => "Element #{part} partial not found. Use ./script/generate elements to generate them."}
       end
+    rescue ActionView::MissingTemplate
+      warning(%(
+        Element #{part} partial not found for #{element.name}.\n
+        Looking for #{partial_name}, but not found
+        neither in #{path1}
+        nor in #{path2}
+        Use ./script/generate elements to generate them.
+        Maybe you still have old style partial names? (like .rhtml). Then please rename them in .html.erb'
+      ))
+      render :partial => "elements/#{part}_not_found", :locals => {:name => element.name, :error => "Element #{part} partial not found. Use ./script/generate elements to generate them."}
     end
   end
 
@@ -313,14 +313,14 @@ module AlchemyHelper
       warning('Element is nil')
       return ""
     else
-      content_name = t("alchemy.content_names.#{content.element.name}.#{content.name}", :default => ["alchemy.content_names.#{content.name}".to_sym, content.name.capitalize])
+      content_name = content.name_for_label
     end
     if content.description.blank?
       warning("Content #{content.name} is missing its description")
       title = _("Warning: Content '%{contentname}' is missing its description.") % {:contentname => content.name}
-  	  content_name = %(<span class="warning icon" title="#{title}"></span>&nbsp;) + content_name
-  	end
-  	content.has_validations? ? "#{content_name}<span class='validation_indicator'>*</span>" : content_name
+      content_name = %(<span class="warning icon" title="#{title}"></span>&nbsp;) + content_name
+    end
+    content.has_validations? ? "#{content_name}<span class='validation_indicator'>*</span>" : content_name
   end
   
   # Returns @page.title
@@ -730,11 +730,10 @@ module AlchemyHelper
       :render_format => "html"
     }
     options = default_options.merge(options)
-    if File.exists?("#{RAILS_ROOT}/app/views/page_layouts/_#{@page.page_layout.downcase}.#{options[:render_format]}.erb") || File.exists?("#{RAILS_ROOT}/vendor/plugins/alchemy/app/views/page_layouts/_#{@page.page_layout.downcase}.#{options[:render_format]}.erb")
-      render :partial => "page_layouts/#{@page.page_layout.downcase}.#{options[:render_format]}.erb"
-    else
-      render :partial => "page_layouts/standard"
-    end
+    render :partial => "page_layouts/#{@page.page_layout.downcase}.#{options[:render_format]}.erb"
+  rescue ActionView::MissingTemplate
+    warning("PageLayout: '#{@page.page_layout}' not found. Rendering standard page_layout.")
+    render :partial => "page_layouts/standard"
   end
   
   # Returns @current_language set in the action (e.g. Page.show)
@@ -781,34 +780,33 @@ module AlchemyHelper
     options = default_options.merge(options)
     options[:onkeyup] << ";jQuery('#search_field').val().length >= 1 ? jQuery('.js_filter_field_clear').show() : jQuery('.js_filter_field_clear').hide();"
     filter_field = "<div class=\"js_filter_field_box\">"
-    filter_field << text_field_tag("filter", "", options)
+    filter_field << text_field_tag("filter", '', options)
+    filter_field << content_tag('span', '', :class => 'icon search')
     filter_field << link_to_function(
       "",
-      "$('#{options[:id]}').value = '';#{options[:onkeyup]}",
+      "jQuery('##{options[:id]}').val('');#{options[:onkeyup]}",
       :class => "js_filter_field_clear",
       :style => "display:none",
       :title => _("click_to_show_all")
     )
-    filter_field << ("<br /><label for=\"search_field\">" + _("search") + "</label>")
+    filter_field << "<label for=\"search_field\">" + _("search") + "</label>"
     filter_field << "</div>"
     filter_field
   end
   
   def clipboard_select_tag(items, html_options = {})
-    unless items.blank?
-      options = [[_('Please choose'), ""]]
-      items.each do |item|
-        options << [item.class.to_s == 'Element' ? item.display_name_with_preview_text : item.name, item.id]
-      end
-      select_tag(
-  			'paste_from_clipboard',
-  			options_for_select(options),
-  			{
-  			  :class => html_options[:class] || 'very_long',
-  			  :style => html_options[:style]
-  			}
-  		)
+    options = [[_('Please choose'), ""]]
+    items.each do |item|
+      options << [item.class.to_s == 'Element' ? item.display_name_with_preview_text : item.name, item.id]
     end
+    select_tag(
+      'paste_from_clipboard',
+      options_for_select(options),
+      {
+        :class => html_options[:class] || 'very_long',
+        :style => html_options[:style]
+      }
+    )
   end
   
   # Returns all elements that could be placed on that page because of the pages layout.
@@ -830,7 +828,7 @@ module AlchemyHelper
     cells_definition.each do |cell|
       cell_elements = elements.select { |e| cell['elements'].include?(e['name']) }
       celled_elements += cell_elements
-      optgroup_label = t("cell_names.#{cell['name']}", :default => cell['name'].camelcase)
+      optgroup_label = Cell.translated_label_for(cell['name'])
       options[optgroup_label] = cell_elements.map { |e| [I18n.t("alchemy.element_names.#{e['name']}", :default => e['name'].capitalize), e['name']] }
     end
     other_elements = elements - celled_elements
@@ -852,14 +850,15 @@ module AlchemyHelper
     )
   end
   
-  # Renders a form select tag for storing page ids
+  # Renders a form select tag for storing page urlnames
   # Options:
-  #   * element - element the Content find via content_name to store the pages id in.
-  #   * content_name - the name of the content from element to store the pages id in.
+  #   * element - element the Content find via content_name to store the pages urlname in.
+  #   * content_name - the name of the content from element to store the pages urlname in.
   #   * options (Hash)
   #   ** :only (Hash)  - pass page_layout names to :page_layout => [""] so only pages with this page_layout will be displayed inside the select.
   #   ** :except (Hash)  - pass page_layout names to :page_layout => [""] so all pages except these with this page_layout will be displayed inside the select.
-  #   * select_options (Hash) - will be passed to the select_tag helper 
+  #   ** :page_attribute (Symbol) - The Page attribute which will be stored.
+  #   * select_options (Hash) - will be passed to the select_tag helper
   def page_selector(element, content_name, options = {}, select_options = {})
     default_options = {
       :except => {
@@ -867,7 +866,9 @@ module AlchemyHelper
       },
       :only => {
         :page_layout => [""]
-      }
+      },
+      :page_attribute => :urlname,
+      :prompt => _('Choose page')
     }
     options = default_options.merge(options)
     content = element.content_by_name(content_name)
@@ -886,7 +887,7 @@ module AlchemyHelper
     )
     select_tag(
       "contents[content_#{content.id}][body]",
-      pages_for_select(pages, content.essence.body),
+      pages_for_select(pages, content.essence.body, options[:prompt], options[:page_attribute]),
       select_options
     )
   end
@@ -921,13 +922,13 @@ module AlchemyHelper
   # Returns all Pages found in the database as an array for the rails select_tag helper.
   # You can pass a collection of pages to only returns these pages as array.
   # Pass an Page.name or Page.id as second parameter to pass as selected for the options_for_select helper.
-  def pages_for_select(pages = nil, selected = nil, prompt = "")
+  def pages_for_select(pages = nil, selected = nil, prompt = "", page_attribute = :id)
     result = [[prompt.blank? ? _('Choose page') : prompt, ""]]
     if pages.blank?
       pages = Page.find_all_by_language_id_and_public(session[:language_id], true)
     end
     pages.each do |p|
-      result << [p.name, p.id.to_s]
+      result << [p.name, p.send(page_attribute).to_s]
     end
     options_for_select(result, selected.to_s)
   end
@@ -1155,28 +1156,12 @@ module AlchemyHelper
   end
   
   def alchemy_preview_mode_code
-    if @preview_mode
-      append_javascript = %(
-var s = document.createElement('script');
-s.src = '/javascripts/alchemy/jquery-1.5.min.js';
-s.language = 'javascript';
-s.type = 'text/javascript';
-document.getElementsByTagName("body")[0].appendChild(s);
-      )
-      str = javascript_tag("if (typeof(jQuery) !== 'function') {#{append_javascript}}") + "\n"
-      str += javascript_tag("jQuery.noConflict();") + "\n"
-      str += javascript_include_tag("alchemy/alchemy") + "\n"
-      str += javascript_tag("jQuery(document).ready(function() {\nAlchemy.ElementSelector();\n});\njQuery('a').not('[href^=#]').attr('href', 'javascript:void(0)');")
-      return str
-    else
-      return nil
-    end
+    javascript_include_tag("alchemy/alchemy.preview") if @preview_mode
   end
   
+  # Renders the data-alchemy-element HTML attribut used for the preview window hover effect.
   def element_preview_code(element)
-    if @preview_mode
-      "data-alchemy-element='#{element.id}'"
-    end
+    " data-alchemy-element='#{element.id}'" if @preview_mode && element.page == @page
   end
   
   # Logs a message in the Rails logger (warn level) and optionally displays an error message to the user.

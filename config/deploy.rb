@@ -33,6 +33,8 @@ after "deploy:symlink", "deploy:db:symlink"
 before "deploy:restart", "deploy:migrate"
 before "deploy:restart", "deploy:seed"
 
+after "deploy", "deploy:cleanup"
+
 namespace :logs do
   desc "show last 100 lines of production.log"
   task :tail do

@@ -59,7 +59,7 @@
 				configure_admin_page_path(@page),
 				{
 					:title => _('edit_page_properties'),
-					:size => @page.layoutpage? ? '340x150' : '380x490'
+					:size => @page.layoutpage? ? '340x150' : '380x600'
 				},
 				:class => 'icon_button',
 				:title => _('edit_page_properties')
@@ -132,7 +132,7 @@
 							'<%= new_admin_element_path(:page_id => @page.id) %>',
 							'<%= _("New Element") %>',
 							'410',
-							'50',
+							'70',
 							false,
 							true,
 							true

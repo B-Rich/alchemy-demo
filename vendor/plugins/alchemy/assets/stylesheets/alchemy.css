@@ -209,6 +209,7 @@ div#top_menu {
 	top: 0;
 	left: 65px;
 	z-index: 5;
+	width: 93%;
 }
 
 #main_menu {
@@ -261,6 +262,7 @@ div#top_menu {
 	top: 90px;
 	left: 65px;
 	z-index: 0;
+	width: 93%;
 }
 
 div#user_info {
@@ -428,16 +430,15 @@ a.drop_down_select img {
 	position: relative;
 	float: right;
 	margin-left: 4px;
-	top: -5px;
 }
 
 .js_filter_field_box .js_filter_field {
-	width: 200px;
-	padding-right: 8px;
-	padding-left: 8px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+	width: 170px;
+	text-align: left;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	border-radius: 12px;
+	padding: 3px 24px 2px;
 }
 
 #flags a img {
@@ -448,10 +449,8 @@ a.drop_down_select img {
 }
 
 .js_filter_field_box label {
-	padding-top: 3px;
 	text-shadow: #fefefe 1px 1px 0;
 	font-size: 10px;
-	width: 200px;
 	display: inline-block;
 	text-align: center;
 }
@@ -462,7 +461,7 @@ a.drop_down_select img {
 	background: url(/images/alchemy/icons.png) no-repeat 0 -104px;
 	position: absolute;
 	right: 8px;
-	top: 3px;
+	top: 4px;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -861,12 +860,46 @@ div.tip {
 	text-decoration: none;
 }
 
+.sitemap_pagename_link.inactive {
+	color: #656565;
+}
+
+.redirect_url {
+	position: absolute;
+	top: 4px;
+	right: 184px;
+	text-align: right;
+	background-color: #fff0c4;
+	line-height: 22px;
+	padding-right: 4px;
+	font-size: 10px;
+	padding-left: 4px;
+}
+
 .sitemap_pagename_link.odd {
 	background-color: #fff;
 }
 
 a.sitemap_pagename_link:hover {
 	text-decoration: underline;
+}
+
+div#page_selector_container a.sitemap_pagename_link:hover {
+  text-decoration: none;
+}
+
+a.sitemap_pagename_link:hover:after {
+	content: '';
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin-right: 4px;
+	background: url(/images/alchemy/icons.png) -32px -104px;
+	margin-top: 4px;
+}
+
+div#page_selector_container a.sitemap_pagename_link:hover:after {
+  display: none;
 }
 
 .sitemap_line_spacer {
@@ -906,7 +939,7 @@ div.sitemap_page {
 	position: relative;
 }
 
-div.sitemap_page:hover .sitemap_pagename_link {
+div.sitemap_page:hover a.sitemap_pagename_link {
 	background-color: #fdffdf;
 }
 
@@ -941,6 +974,11 @@ div.sitemap_right_tools {
 	background-color: #ededed;
 	padding-left: 16px;
 	float: right;
+	width: 100px;
+}
+
+div#page_selector_container div.sitemap_right_tools {
+	width: 24px;
 }
 
 ul#sitemap li .sitemap_toolrow,
@@ -1026,7 +1064,7 @@ span.page_status.not_public {
 	background: url(/images/alchemy/icons.png) no-repeat 0 -24px;
 }
 
-.site_status.locked {
+.locked .site_status {
 	background-position: -16px -24px;
 }
 
@@ -1750,6 +1788,10 @@ button.button {
 	text-shadow: #f2f2f2 1px 1px 0;
 }
 
+#new_element button.button {
+	float: right;
+}
+
 input.button {
 	padding-left: 8px;
 	padding-right: 8px;
@@ -2243,6 +2285,7 @@ textarea.thin_border {
 	border-radius: 3px;
 	background: #fff;
 	border: 1px inset #e5e5e5;
+	width: 210px;
 }
 
 .thin_border.dirty {
@@ -2431,6 +2474,10 @@ span.icon.trash.full {
 }
 
 a.icon.file_download {
+	background: url(/images/alchemy/icons.png) -240px -72px;
+}
+
+.icon.download {
 	background: url(/images/alchemy/icons.png) -240px -72px;
 }
 
@@ -2744,7 +2791,8 @@ div.button_with_label:hover label {
 	text-decoration: none;
 }
 
-div.search_field span.icon {
+div.search_field span.icon,
+div.js_filter_field_box span.icon {
 	position: absolute;
 	left: 6px;
 	top: 4px;
@@ -2776,15 +2824,15 @@ div#per_page_values {
 
 #errorExplanation {
 	background: #ffdfdf;
-	padding: 8px 8px 8px 16px;
+	padding: 8px;
 	text-align: left;
 	margin-bottom: 8px;
 	border: 1px solid #d08f91;
 	color: #690001;
-	-webkit-border-radius: 0 7px 7px 7px;
-	-moz-border-radius: 0 7px 7px 7px;
-	-o-border-radius: 0 7px 7px 7px;
-	border-radius: 0 7px 7px 7px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
 }
 
 #errorExplanation h2 {
@@ -2882,7 +2930,8 @@ div.assign_image_list_detail {
 }
 
 #assign_image_list {
-	padding-top: 8px;
+	padding: 8px;
+	overflow: hidden;
 }
 
 #assign_image_list div.assign_image_list_detail.small {
@@ -3345,8 +3394,8 @@ select#url_protocol.medium {
 
 #alchemy .ui-dialog-content input.long,
 #alchemy .ui-dialog-content textarea.long {
-	width: 250px;
 	margin: 0;
+	width: 240px;
 }
 
 #alchemy .ui-dialog-content input.very_long {

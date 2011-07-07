@@ -5,7 +5,7 @@
 			<%- @elements.each do |cell, elements| -%>
 			<li>
 				<a href="#cell_<%= cell.name -%>">
-					<%= cell.name == 'for_other_elements' ? _('other Elements') : t("cell_names.#{cell.name}", :default => cell.name.camelcase) -%>
+					<%= cell.name == 'for_other_elements' ? _('other Elements') : t("alchemy.cell_names.#{cell.name}", :default => cell.name.camelcase) -%>
 				</a>
 			</li>
 			<%- end -%>
@@ -24,10 +24,10 @@
 </div>
 <script type="text/javascript" charset="utf-8">
 	Alchemy.SortableElements(<%= @page.id %>, '<%= form_authenticity_token %>');
-	Alchemy.ElementEditorSelector();
+	Alchemy.ElementEditorSelector.init();
 	Alchemy.SelectBox('.element_editor select');
 	TinymceHammer.init();
 	Alchemy.ElementDirtyObserver('#element_area');
 	jQuery('#cells').tabs();
-	jQuery('#cells').tabs('paging', { follow: false } );
+	jQuery('#cells').tabs('paging', { follow: true, followOnSelect: true } );
 </script>

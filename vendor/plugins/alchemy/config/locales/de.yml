@@ -69,6 +69,11 @@ de:
       image_mosaic:
         caption: "Mosaik Bildunterschrift"
     
+    content_validations:
+      errors:
+        blank: '%{field} darf nicht leer sein.'
+        wrong_format: '%{field} hat das falsche Format.'
+    
     # == Translations for the build in full text search.
     search:
       no_results: 'Ihre Suche ergab kein Ergebnis.'
@@ -299,8 +304,8 @@ de:
     errors:
       template:
         header:
-          one:    "Konnte %{model} nicht speichern: 1 Fehler."
-          other:  "Konnte %{model} nicht speichern: %{count} Fehler."
+          one:    "Konnte dieses Formular nicht speichern: 1 Fehler."
+          other:  "Konnte dieses Formular nicht speichern: %{count} Fehler."
         body: "Bitte überprüfen Sie:"
       messages:
         inclusion: "%{attribute} ist kein gültiger Wert"

@@ -1,5 +1,5 @@
 class Content < ActiveRecord::Base
-  
+
   belongs_to :essence, :polymorphic => true, :dependent => :destroy
   belongs_to :element
   stampable :stamper_class_name => :user
@@ -100,6 +100,42 @@ class Content < ActiveRecord::Base
   def has_validations?
     return false if description.blank?
     !description['validate'].blank?
+  end
+  
+  # Returns a string to be passed to Rails form field tags to ensure we have same params layout everywhere.
+  # 
+  # Example:
+  # ========
+  # 	<%= text_field_tag content.form_field_name, content.ingredient %>
+  # 
+  # Options:
+  # ========
+  # You can pass an Essence column_name. Default is self.essence.ingredient_column
+  # 
+  # Example:
+  # =======
+  # 	<%= text_field_tag content.form_field_name(:link), content.ingredient %>
+  # 
+  def form_field_name(essence_column = self.essence.ingredient_column)
+    "contents[content_#{self.id}][#{essence_column}]"
+  end
+  
+  def form_field_id(essence_column = self.essence.ingredient_column)
+    "contents_content_#{self.id}_#{essence_column}"
+  end
+  
+  # Returns the translated name for displaying in labels, etc.
+  def name_for_label
+    self.class.translated_label_for(self.name, self.element.name)
+  end
+  
+  # Translates a name from string. Optional: pass an element_name to namespacing.
+  def self.translated_label_for(content_name, element_name = nil)
+    if element_name.blank?
+      I18n.t("alchemy.content_names.#{content_name}", :default => content_name.capitalize)
+    else
+      I18n.t("alchemy.content_names.#{element_name}.#{content_name}", :default => ["alchemy.content_names.#{content_name}".to_sym, content_name.capitalize])
+    end
   end
   
 end

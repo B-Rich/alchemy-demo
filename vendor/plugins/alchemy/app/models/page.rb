@@ -316,7 +316,7 @@ class Page < ActiveRecord::Base
   # You can pass any kind of Page#attributes as a difference to source.
   # Notice: It prevents the element auto_generator from running.
   def self.copy(source, differences = {})
-    attributes = source.attributes.merge(differences)
+    attributes = source.attributes.symbolize_keys.merge(differences)
     attributes.merge!(
       :do_not_autogenerate => true, 
       :do_not_sweep => true, 
@@ -389,8 +389,10 @@ class Page < ActiveRecord::Base
   
   def copy_children_to(new_parent)
     self.children.each do |child|
+      next if child == new_parent
       new_child = Page.copy(child, {
-        :language => self.language,
+        :language_id => new_parent.language_id,
+        :language_code => new_parent.language_code,
         :name => child.name + ' (' + _('Copy') + ')',
         :urlname => '',
         :title => ''
@@ -402,7 +404,9 @@ class Page < ActiveRecord::Base
   
   # Returns true or false if the page has a page_layout that has cells.
   def has_cells?
-    !Alchemy::PageLayout.get(page_layout)['cells'].blank?
+    pagelayout = Alchemy::PageLayout.get(self.page_layout)
+    return false if pagelayout.blank?
+    !pagelayout['cells'].blank?
   end
   
 private
@@ -438,13 +442,15 @@ private
     new_url_name = new_url_name.gsub(/[^a-zA-Z0-9_]+/, '-')
     if(new_url_name.length < 3)
       new_url_name = "-#{new_url_name}-"
+    else
+      new_url_name.gsub(/-+$/, '')
     end
-    new_url_name
   end
   
   # Looks in the layout_descripion, if there are elements to autogenerate.
   # If so, it generates them.
   def autogenerate_elements
+		return true if self.layout_description.blank?
     elements = self.layout_description["autogenerate"]
     unless (elements.blank?)
       elements.each do |element|

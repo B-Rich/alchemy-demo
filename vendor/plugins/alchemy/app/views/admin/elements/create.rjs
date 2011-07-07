@@ -1,6 +1,5 @@
 if @page.has_cells?
-  cell_label = @cell.nil? ? _('other Elements') : t("cell_names.#{@cell.name}", :default => @cell.name.camelcase)
-  page << "Alchemy.selectOrCreateCellTab('#{@cell.nil? ? 'for_other_elements' : @cell.name}', '#{cell_label}')"
+  page << "Alchemy.selectOrCreateCellTab('#{@cell.nil? ? 'for_other_elements' : @cell.name}', '#{@cell.nil? ? _('other Elements') : @cell.name_for_label}')"
 end
 page.insert_html(
   :bottom,
@@ -13,10 +12,10 @@ page << "jQuery('#cell_#{@cell.nil? ? 'for_other_elements' : @cell.name}').sorta
 Alchemy::Notice.show(page, _("successfully_added_element"))
 page << "Alchemy.closeCurrentWindow()"
 @element.rtf_contents.each do |content|
-  page << "TinymceHammer.addEditor('contents_content_#{content.id}_body')"
+  page << "TinymceHammer.addEditor('#{content.form_field_id}')"
 end
 page << "Alchemy.PreviewWindow.refresh()"
-page << "Alchemy.ElementEditorSelector()"
+page << "Alchemy.ElementEditorSelector.init()"
 page << "jQuery('#element_#{@element.id}').trigger('Alchemy.SelectElementEditor')"
 page << "Alchemy.ElementDirtyObserver('#element_#{@element.id}')"
 page << "Alchemy.SelectBox('#element_#{@element.id} select')"

@@ -1,5 +1,5 @@
 if (typeof(Alchemy) === 'undefined') {
-	var Alchemy;
+	var Alchemy = {};
 }
 
 (function ($) {
@@ -8,16 +8,16 @@ if (typeof(Alchemy) === 'undefined') {
 	$.fx.speeds._default = 400;
 	
 	// The Alchemy JavaScript Object contains all Functions
-	Alchemy = {
+	$.extend(Alchemy, {
 		
 		inPlaceEditor : function (options) {
 			var defaults = {
 				save_label: 'save', 
 				cancel_label: 'cancel'
 			};
-			var settings = $.extend({}, defaults, options);
+			var settings = jQuery.extend({}, defaults, options);
 			var cancel_handler = function(element) {
-				$(element).css({overflow: 'hidden'});
+				jQuery(element).css({overflow: 'hidden'});
 				return true;
 			};
 			var submit_handler = function(element, id, value) {
@@ -63,10 +63,18 @@ if (typeof(Alchemy) === 'undefined') {
 			return $spinner;
 		},
 		
-		AjaxErrorHandler : function(element, status, textStatus, errorThrown) {
-			element.html('<h1>'+status+'</h1>');
-			element.append('<p>'+textStatus+'</p>');
-			element.append('<p>'+errorThrown+'</p>');
+		AjaxErrorHandler : function($dialog, status, textStatus, errorThrown) {
+			var $div = $('<div class="with_padding" />');
+			var $errorDiv = $('<div id="errorExplanation" />');
+			$dialog.html($div);
+			$div.append($errorDiv);
+			if (status === 0) {
+				$errorDiv.append('<h2>The server does not respond!</h2>');
+				$errorDiv.append('<p>Please start server and try again.</p>');
+			} else {
+				$errorDiv.append('<h2>'+errorThrown+' ('+status+')</h2>');
+				$errorDiv.append('<p>Please check log and try again.</p>');
+			}
 		},
 		
 		openPreviewWindow : function (url, title) {
@@ -287,7 +295,7 @@ if (typeof(Alchemy) === 'undefined') {
 				}
 			});
 		},
-
+		
 		confirmToDeleteWindow : function (url, title, message, okLabel, cancelLabel) {
 			var $confirmation = $('<div style="display:none" id="alchemyConfirmation"></div>');
 			$confirmation.appendTo('body');
@@ -326,7 +334,7 @@ if (typeof(Alchemy) === 'undefined') {
 				}
 			});
 		},
-
+		
 		openWindow : function (action_url, title, size_x, size_y, resizable, modal, overflow) {
 			overflow == undefined ? overflow = false: overflow = overflow;
 			if (size_x === 'fullscreen') {
@@ -336,7 +344,7 @@ if (typeof(Alchemy) === 'undefined') {
 			var $dialog = $('<div style="display:none" id="alchemyOverlay"></div>');
 			$dialog.appendTo('body');
 			$dialog.html(Alchemy.getOverlaySpinner({x: size_x, y: size_y}));
-
+			
 			Alchemy.CurrentWindow = $dialog.dialog({
 				modal: modal, 
 				minWidth: size_x, 
@@ -368,7 +376,7 @@ if (typeof(Alchemy) === 'undefined') {
 				}
 			});
 		},
-
+		
 		closeCurrentWindow : function() {
 			if (Alchemy.CurrentWindow) {
 				Alchemy.CurrentWindow.dialog('close');
@@ -378,7 +386,7 @@ if (typeof(Alchemy) === 'undefined') {
 			}
 			return true;
 		},
-
+		
 		zoomImage : function(url, title, width, height) {
 			var window_height = height;
 			var window_width = width;
@@ -417,7 +425,7 @@ if (typeof(Alchemy) === 'undefined') {
 			});
 			return false;
 		},
-
+		
 		openLicencseWindow : function() {
 			var height = $(window).height() - 150;
 			var $iframe = $('<iframe src="http://www.gnu.org/licenses/gpl-3.0.txt"></iframe>');
@@ -431,12 +439,12 @@ if (typeof(Alchemy) === 'undefined') {
 				open: function (event, ui) { $(this).css({width: '100%'}); }
 			});
 		},
-
+		
 		openLinkWindow : function (linked_element, width) {
 			var $dialog = $('<div style="display:none" id="alchemyLinkOverlay"></div>');
-
+			
 			$dialog.html(Alchemy.getOverlaySpinner({x: width}));
-
+			
 			Alchemy.CurrentLinkWindow = $dialog.dialog({
 				modal: true, 
 				minWidth: parseInt(width) < 600 ? 600 : parseInt(width), 
@@ -460,16 +468,16 @@ if (typeof(Alchemy) === 'undefined') {
 					$dialog.remove();
 				}
 			});
-
+			
 			Alchemy.CurrentLinkWindow.linked_element = linked_element;
-
+			
 			Alchemy.CurrentLinkWindow.close = function () {
 				Alchemy.CurrentLinkWindow.dialog('close');
 				return true;
 			};
-
+			
 		},
-
+		
 		pleaseWaitOverlay : function(show) {
 			if (typeof(show) == 'undefined') {
 				show = true;
@@ -477,7 +485,7 @@ if (typeof(Alchemy) === 'undefined') {
 			var $overlay = $('#overlay');
 			$overlay.css("visibility", show ? 'visible': 'hidden');
 		},
-
+		
 		toggleElement : function (id, url, token, text) {
 			var toggle = function() {
 				$('#element_'+id+'_folder').hide();
@@ -502,7 +510,7 @@ if (typeof(Alchemy) === 'undefined') {
 				toggle();
 			}
 		},
-
+		
 		ListFilter : function(selector) {
 			var text = $('#search_field').val().toLowerCase();
 			var $boxes = $(selector);
@@ -513,7 +521,7 @@ if (typeof(Alchemy) === 'undefined') {
 				});
 			});
 		},
-
+		
 		selectPageForInternalLink : function(selected_element, urlname) {
 			$('#page_anchor').removeAttr('value');
 			// We have to remove the Attribute. If not the value does not get updated.
@@ -522,7 +530,7 @@ if (typeof(Alchemy) === 'undefined') {
 			$('#alchemyLinkOverlay #sitemap .selected_page').removeClass('selected_page');
 			$('#sitemap_sitename_' + selected_element).addClass('selected_page').attr('name', urlname);
 		},
-
+		
 		createLink : function(link_type, url, title, extern) {
 			var element = Alchemy.CurrentLinkWindow.linked_element;
 			Alchemy.setElementDirty($(element).parents('.element_editor'));
@@ -548,23 +556,23 @@ if (typeof(Alchemy) === 'undefined') {
 					content_id = element.name.replace('content_text_', '');
 					break;
 				}
-				$('#content_' + content_id + '_link').val(url);
-				$('#content_' + content_id + '_link_title').val(title);
-				$('#content_' + content_id + '_link_class_name').val(link_type);
-				$('#content_' + content_id + '_link_target').val(extern ? '1': '0');
+				$('#contents_content_' + content_id + '_link').val(url);
+				$('#contents_content_' + content_id + '_link_title').val(title);
+				$('#contents_content_' + content_id + '_link_class_name').val(link_type);
+				$('#contents_content_' + content_id + '_open_link_in_new_window').val(extern ? '1': '0');
 				$(element).addClass('linked');
 			}
 		},
-
+		
 		// Selects the tab for kind of link and fills all fields.
 		selectLinkWindowTab : function() {
 			var linked_element = Alchemy.CurrentLinkWindow.linked_element, link;
-
+			
 			// Creating an temporary anchor node if we are linking an EssencePicture or EssenceText.
 			if (linked_element.nodeType) {
 				link = Alchemy.createTempLink(linked_element);
 			}
-
+			
 			// Restoring the bookmarked selection inside the TinyMCE of an EssenceRichtext.
 			else {
 				if (linked_element.node.nodeName === 'A') {
@@ -574,14 +582,14 @@ if (typeof(Alchemy) === 'undefined') {
 					return false;
 				}
 			}
-
+			
 			$('#alchemyLinkOverlay .link_title').val(link.title);
 			$('#alchemyLinkOverlay .link_target').attr('checked', link.target == "_blank");
-
+			
 			// Checking of what kind the link is (internal, external, file or contact_form).
 			if ($(link).is("a")) {
 				var title = link.title == null ? "": link.title;
-
+				
 				// Handling an internal link.
 				if ((link.className == '') || link.className == 'internal') {
 					var internal_anchor = link.hash.split('#')[1];
@@ -601,10 +609,10 @@ if (typeof(Alchemy) === 'undefined') {
 						}
 					}
 				}
-
+				
 				// Handling an external link.
 				if (link.className == 'external') {
-					Alchemy.showLinkWindowTab('#overlay_tab_external_link');				
+					Alchemy.showLinkWindowTab('#overlay_tab_external_link');
 					var protocols = [];
 					$('#url_protocol option').map(function() {
 						protocols.push($(this).attr('value'));
@@ -616,13 +624,13 @@ if (typeof(Alchemy) === 'undefined') {
 						}
 					});
 				}
-
+				
 				// Handling a file link.
 				if (link.className == 'file') {
 					Alchemy.showLinkWindowTab('#overlay_tab_file_link');
 					$('#public_filename').val(link.pathname + link.search);
 				}
-
+				
 				// Handling a contactform link.
 				if (link.className == 'contact') {
 					var link_url = link.pathname;
@@ -638,20 +646,20 @@ if (typeof(Alchemy) === 'undefined') {
 				}
 			}
 		},
-
+		
 		showElementsFromPageSelector: function(id) {
 			$('#elements_for_page_' + id + ' div.selectbox').remove();
 			$('#elements_for_page_' + id).show();
 			$('#page_selector_container').scrollTo('#sitemap_sitename_'+id, {duration: 400, offset: -10});
 		},
-
+		
 		hideElementsFromPageSelector: function(id) {
 			$('#elements_for_page_' + id).hide();
 			$('#elements_for_page_' + id + ' div.selectbox').remove();
 			$('#page_anchor').removeAttr('value');
 			$('#page_selector_container').scrollTo('#sitemap_sitename_'+id, {duration: 400, offset: -10});
 		},
-
+		
 		createTempLink : function(linked_element) {
 			var $tmp_link = $("<a></a>");
 			var essence_type = $(linked_element).attr('name').replace('essence_', '').split('_')[0];
@@ -664,28 +672,28 @@ if (typeof(Alchemy) === 'undefined') {
 					content_id = $(linked_element).attr('name').replace('essence_text_', '');
 				break;
 			}
-			$tmp_link.attr('href', $('#content_' + content_id + '_link').val());
-			$tmp_link.attr('title', $('#content_' + content_id + '_link_title').val());
-			if ($('#content_' + content_id + '_link_target').val() == '1') {
+			$tmp_link.attr('href', $('#contents_content_' + content_id + '_link').val());
+			$tmp_link.attr('title', $('#contents_content_' + content_id + '_link_title').val());
+			if ($('#contents_content_' + content_id + '_open_link_in_new_window').val() == '1') {
 				$tmp_link.attr('target', '_blank');
 			}
-			$tmp_link.addClass($('#content_' + content_id + '_link_class_name').val());
+			$tmp_link.addClass($('#contents_content_' + content_id + '_link_class_name').val());
 			return $tmp_link[0];
 		},
-
+		
 		removePictureLink : function(content_id) {
 			Alchemy.setElementDirty($('#essence_picture_' + content_id).parents('.element_editor'));
-			$('#content_' + content_id + '_link').val('');
-			$('#content_' + content_id + '_link_title').val('');
-			$('#content_' + content_id + '_link_class_name').val('');
-			$('#content_' + content_id + '_link_target').val('');
+			$('#contents_content_' + content_id + '_link').val('');
+			$('#contents_content_' + content_id + '_link_title').val('');
+			$('#contents_content_' + content_id + '_link_class_name').val('');
+			$('#contents_content_' + content_id + '_open_link_in_new_window').val('');
 			$('#edit_link_' + content_id).removeClass('linked');
 		},
-
+		
 		showLinkWindowTab : function(id) {
 			$('#overlay_tabs').tabs("select", id);
 		},
-
+		
 		fadeImage : function(image, spinner_selector) {
 			try {
 				$(spinner_selector).hide();
@@ -711,27 +719,7 @@ if (typeof(Alchemy) === 'undefined') {
 			Alchemy.enableButton(selector + ' button.button');
 		},
 		
-		PageSorter : function () {
-			$('ul#sitemap').nestedSortable({
-				disableNesting: 'no-nest',
-				forcePlaceholderSize: true,
-				handle: 'span.handle',
-				items: 'li',
-				listType: 'ul',
-				opacity: 0.5,
-				placeholder: 'placeholder',
-				tabSize: 16,
-				tolerance: 'pointer',
-				toleranceElement: '> div'
-			});
-
-			$('#save_page_order').click(function(){
-				var params = $('ul#sitemap').nestedSortable('serialize');
-				$.post('/admin/pages/order', params);
-			});
-		},
-
-		ResizeFrame : function() {
+		resizeFrame : function() {
 			var options = {
 				top: 90,
 				left: 65,
@@ -756,121 +744,6 @@ if (typeof(Alchemy) === 'undefined') {
 					height: topFrameHeight
 				});
 			}
-		},
-
-		ElementSelector : function() {
-			var $elements = $('[data-alchemy-element]'),
-			selected_style = {
-				'outline-width'  				 : '2px',
-				'outline-style'  				 : 'solid',
-				'outline-color'  				 : '#4b93db',
-				'outline-offset' 				 : '4px',
-				'-moz-outline-radius' 	 : '4px',
-				'outline-radius'				 : '4px'
-			},
-			hover_style = {
-				'outline-width'  			   : '2px',
-				'outline-style'  			   : 'solid',
-				'outline-color'  			   : '#98BAD5',
-				'outline-offset' 				 : '4px',
-				'-moz-outline-radius'		 : '4px',
-				'outline-radius'			   : '4px'
-			},
-			reset_style = {
-				outline: '0 none'
-			};
-			$elements.bind('mouseover', function(e) {
-				$(this).attr('title', 'Klicken zum bearbeiten');
-				if (!$(this).hasClass('selected'))
-					$(this).css(hover_style);
-			});
-			$elements.bind('mouseout', function() {
-				$(this).removeAttr('title');
-				if (!$(this).hasClass('selected'))
-					$(this).css(reset_style);
-			});
-			$elements.bind('Alchemy.SelectElement', function(e) {
-				var offset = 20, $element = $(this), $selected = $elements.closest('[class="selected"]');
-				e.preventDefault();
-				$elements.removeClass('selected');
-				$elements.css(reset_style);
-				$(this).addClass('selected');
-				$(this).css(selected_style);
-				$('html, body').animate({
-					scrollTop: $element.offset().top - offset,
-					scrollLeft: $element.offset().left - offset
-				}, 400);
-			});
-			$elements.bind('click', function(e) {
-				var	target_id = $(this).data('alchemy-element'),
-						parent$ = window.parent.jQuery,
-						$element_editor = parent$('#element_area .element_editor').closest('[id="element_'+target_id+'"]'),
-						$elementsWindow = parent$('#alchemyElementWindow');
-				e.preventDefault();
-				$element_editor.trigger('Alchemy.SelectElementEditor', target_id);
-				if ($elementsWindow.dialog("isOpen")) {
-					$elementsWindow.dialog('moveToTop');
-				} else {
-					$elementsWindow.dialog('open');
-				}
-				$(this).trigger('Alchemy.SelectElement');
-			});
-		},
-		
-		ElementEditorSelector : function() {
-			var $elements = $('#element_area .element_editor');
-			
-			$elements.each(function () {
-				Alchemy.bindSelectElementEditor(this, $elements);
-			});
-			
-			$('#element_area .element_editor .element_head').click(function(e) {
-				var $element = $(this).parent('.element_editor'),
-				id = $element.attr('id').replace(/\D/g,''),
-				$selected = $elements.closest('[class="selected"'),
-				$frame_elements = document.getElementById('alchemyPreviewWindow').contentWindow.jQuery('[data-alchemy-element]'),
-				$selected_element = $frame_elements.closest('[data-alchemy-element="'+id+'"]');
-				e.preventDefault();
-				$elements.removeClass('selected');
-				$element.addClass('selected');
-				Alchemy.scrollToElementEditor(this);
-				$selected_element.trigger('Alchemy.SelectElement');
-			});
-			
-		},
-		
-		bindSelectElementEditor: function (element, $elements) {
-			var $cells = $('#cells .sortable_cell'), $cell;
-			if (typeof($elements) === 'undefined') {
-				var $elements = $('#element_area .element_editor');
-			}
-			$(element).bind('Alchemy.SelectElementEditor', function (e) {
-				var id = this.id.replace(/\D/g,''), 
-					$element = $(this), 
-					$selected = $elements.closest('[class="selected"');
-					e.preventDefault();
-				$elements.removeClass('selected');
-				$element.addClass('selected');
-				if ($cells.size() > 0) {
-					$cell = $element.parent('.sortable_cell');
-					$('#cells').tabs('select', $cell.attr('id'));
-				}
-				if ($element.hasClass('folded')) {
-					$('#element_'+id+'_folder').hide();
-					$('#element_'+id+'_folder_spinner').show();
-					$.post('/admin/elements/fold?id='+id, function() {
-						$('#element_'+id+'_folder').show();
-						$('#element_'+id+'_folder_spinner').hide();
-						Alchemy.scrollToElementEditor('#element_'+id);
-					});
-				} else {
-					Alchemy.scrollToElementEditor(this);
-				}
-			});
-		},
-		
-		scrollToElementEditor: function(el) {
-			$('#alchemyElementWindow').scrollTo(el, {duration: 400, offset: -10});
 		},
 		
 		SortableElements : function(page_id, form_token) {
@@ -919,7 +792,7 @@ if (typeof(Alchemy) === 'undefined') {
 						TinymceHammer.addEditor(this.id);
 					});
 				}
-	    });
+			});
 		},
 		
 		openTrashWindow : function (page_id, title) {
@@ -931,13 +804,14 @@ if (typeof(Alchemy) === 'undefined') {
 			var $dialog = $('<div style="display:none" id="alchemyTrashWindow"></div>');
 			$dialog.appendTo('body');
 			$dialog.html(Alchemy.getOverlaySpinner({x: size_x, y: size_y}));
-
+			
 			Alchemy.trashWindow = $dialog.dialog({
-				modal: false, 
-				minWidth: size_x, 
-				minHeight: size_y,
+				modal: false,
+				width: 380,
+				minHeight: 450,
+				maxHeight: $(window).height() - 50,
 				title: title,
-				resizable: true,
+				resizable: false,
 				show: "fade",
 				hide: "fade",
 				open: function (event, ui) {
@@ -945,6 +819,8 @@ if (typeof(Alchemy) === 'undefined') {
 						url: '/admin/trash?page_id=' + page_id,
 						success: function(data, textStatus, XMLHttpRequest) {
 							$dialog.html(data);
+							// Need this for DragnDrop elements into elements window.
+							// Badly this is screwing up maxHeight option
 							$dialog.css({overflow: 'visible'}).dialog('widget').css({overflow: 'visible'});
 						},
 						error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -957,7 +833,7 @@ if (typeof(Alchemy) === 'undefined') {
 				}
 			});
 		},
-
+		
 		refreshTrashWindow: function(page_id) {
 			if ($('#alchemyTrashWindow').length > 0) {
 				$('#alchemyTrashWindow').html(Alchemy.getOverlaySpinner({x: 380, y: 270}));
@@ -966,7 +842,7 @@ if (typeof(Alchemy) === 'undefined') {
 				});
 			}
 		},
-
+		
 		SortableContents : function(selector, token) {
 			$(selector).sortable({
 				items: 'div.dragable_picture',
@@ -992,7 +868,7 @@ if (typeof(Alchemy) === 'undefined') {
 				}
 			});
 		},
-
+		
 		Tooltips : function() {
 			var xOffset = 10;
 			var yOffset = 20;		
@@ -1022,15 +898,15 @@ if (typeof(Alchemy) === 'undefined') {
 				.css("left",(e.pageX + yOffset) + "px");
 			});
 		},
-
+		
 		SelectBox : function(selector) {
-			$(selector).sb({animDuration: 0, fixedWidth: false});
+			$(selector).sb({animDuration: 0, fixedWidth: true});
 		},
-
+		
 		Buttons : function(options) {
 			$("button, input:submit, a.button").button(options);
 		},
-
+		
 		fadeNotices : function() {
 			$('#flash_notices div[class!="flash error"]').delay(5000).hide('drop', { direction: "up" }, 400, function() {
 				$(this).remove();
@@ -1043,7 +919,7 @@ if (typeof(Alchemy) === 'undefined') {
 				});
 			});
 		},
-
+		
 		ElementDirtyObserver : function(selector) {
 			var $elements = $(selector);
 			$elements.find('textarea.tinymce').map(function() {
@@ -1066,26 +942,26 @@ if (typeof(Alchemy) === 'undefined') {
 				Alchemy.setElementDirty($(this).parents('.element_editor'));
 			});
 		},
-
+		
 		setElementDirty : function(element) {
 			var	$element = $(element);
 			$element.addClass('dirty');
 			$element.find('.element_head .icon').addClass('element_dirty');
 		},
-
+		
 		setElementClean : function(element) {
-			var	$element = $(element);
+			var $element = $(element);
 			$element.removeClass('dirty');
 			$element.find('.element_foot input[type="checkbox"]').removeClass('dirty');
 			$element.find('input[type="text"]').removeClass('dirty');
 			$element.find('select').removeClass('dirty');
 			$element.find('.element_head .icon').removeClass('element_dirty');
 		},
-
+		
 		isPageDirty : function() {
 			return $('#element_area').find('.element_editor.dirty').size() > 0;
 		},
-
+		
 		checkPageDirtyness : function(element, text) {
 			var okcallback;
 			if ($(element).is('form')) {
@@ -1124,6 +1000,15 @@ if (typeof(Alchemy) === 'undefined') {
 			});
 		},
 		
+		handleEssenceCheckbox: function (checkbox) {
+			var $checkbox = $(checkbox);
+			if (checkbox.checked) {
+				$('#' + checkbox.id + '_hidden').remove();
+			} else {
+				$checkbox.after('<input type="hidden" value="0" name="'+checkbox.name+'" id="'+checkbox.id+'_hidden">');
+			}
+		},
+		
 		DraggableTrashItems: function (items_n_cells) {
 			$("#trash_items div.draggable").each(function () {
 				$(this).draggable({
@@ -1146,7 +1031,7 @@ if (typeof(Alchemy) === 'undefined') {
 				$('#cells').tabs('add', '#cell_'+cell_name, label);
 				$('#cell_'+cell_name).addClass('sortable_cell');
 			}
-			$('#cells').tabs('select', '#cell_'+cell_name);
+			$('#cells').tabs('select', 'cell_'+cell_name);
 		},
 		
 		ButtonObserver: function (selector) {
@@ -1181,30 +1066,30 @@ if (typeof(Alchemy) === 'undefined') {
 			}
 		}
 		
-	};
+	});
 	
 })(jQuery);
 
-// Call all Alchemy "onload" scripts
-jQuery(document).ready(function () {
+(function($) {
 	
-	Alchemy.ResizeFrame();
-	Alchemy.Tooltips();
-	Alchemy.ButtonObserver('#alchemy button.button');
+	// Call all Alchemy "onload" scripts
+	$(document).ready(function () {
+		Alchemy.resizeFrame();
+		Alchemy.Tooltips();
+		if (typeof(jQuery().sb) === 'function') {
+			Alchemy.SelectBox('body#alchemy select');
+		}
+		if (jQuery('#flash_notices').length > 0) {
+			Alchemy.fadeNotices();
+		}
+	});
 	
-	if (typeof(jQuery().sb) === 'function') {
-		Alchemy.SelectBox('body#alchemy select');
-	}
+	// Alchemy window resize listener
+	$(window).resize(function() {
+		Alchemy.resizeFrame();
+	});
 	
-	if (jQuery('#flash_notices').length > 0) {
-		Alchemy.fadeNotices();
-	}
-	
-});
-
-jQuery(window).resize(function() {
-	Alchemy.ResizeFrame();
-});
+})(jQuery);
 
 // Javascript extensions
 

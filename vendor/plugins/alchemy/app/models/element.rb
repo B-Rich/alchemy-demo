@@ -79,10 +79,10 @@ class Element < ActiveRecord::Base
     element_descriptions = Element.descriptions
     return if element_descriptions.blank?
     element_scratch = element_descriptions.select{ |m| m["name"] == attributes['name'] }.first
-    element_scratch.delete("contents")
-    element_scratch.delete("available_contents")
     element = Element.new(
-      element_scratch.merge({:page_id => attributes['page_id']})
+      element_scratch.except('contents', 'available_contents', 'display_name').merge({
+        :page_id => attributes['page_id']
+      })
     )
     element
   end
@@ -298,10 +298,11 @@ class Element < ActiveRecord::Base
   # Essence validation errors messages are translated via I18n.
   # Inside your translation file add translations like:
   # 
-  #   content_validations:
-  #     name_of_the_element:
-  #       name_of_the_content:
-  #         validation_error_type: Error Message
+  #   alchemy:
+  #     content_validations:
+  #       name_of_the_element:
+  #         name_of_the_content:
+  #           validation_error_type: Error Message
   # 
   # validation_error_type has to be one of:
   # 
@@ -312,16 +313,23 @@ class Element < ActiveRecord::Base
   # Example:
   # 
   #   de:
-  #     content_validations:
-  #       contact:
-  #         email:
-  #           wrong_format: 'Die Email hat nicht das richtige Format'
+  #     alchemy:
+  #       content_validations:
+  #         contact:
+  #           email:
+  #             wrong_format: 'Die Email hat nicht das richtige Format'
   # 
   def essence_error_messages
     messages = []
     essence_errors.each do |content_name, errors|
       errors.each do |error|
-        messages << I18n.t("content_validations.#{self.name}.#{content_name}.#{error}")
+        messages << I18n.t(
+          "alchemy.content_validations.#{self.name}.#{content_name}.#{error}",
+          :default => [
+            "alchemy.content_validations.fields.#{content_name}.#{error}".to_sym,
+            "alchemy.content_validations.errors.#{error}".to_sym
+          ]
+        ) % {:field => Content.translated_label_for(content_name)}
       end
     end
     messages
@@ -355,6 +363,10 @@ private
   def self.all_for_page(page)
     # if page_layout has cells, collect elements from cells and group them by cellname
     page_layout = Alchemy::PageLayout.get(page.page_layout)
+    if page_layout.blank?
+      logger.warn "\n++++++\nWARNING! Could not find page_layout description for page: #{page.name}\n++++++++\n"
+      return []
+    end
     elements_for_layout = []
     if page_layout['cells'].is_a?(Array)
       elements_for_layout += Cell.all_element_definitions_for(page_layout['cells'])
