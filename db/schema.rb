@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110414163140) do
+ActiveRecord::Schema.define(:version => 20110707193318) do
 
   create_table "attachments", :force => true do |t|
     t.string   "name"
@@ -18,6 +18,13 @@ ActiveRecord::Schema.define(:version => 20110414163140) do
     t.integer  "size"
     t.integer  "creator_id"
     t.integer  "updater_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cells", :force => true do |t|
+    t.integer  "page_id"
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -47,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20110414163140) do
     t.datetime "updated_at"
     t.integer  "creator_id"
     t.integer  "updater_id"
+    t.integer  "cell_id"
   end
 
   add_index "elements", ["page_id", "position"], :name => "index_elements_on_page_id_and_position"
@@ -137,7 +145,7 @@ ActiveRecord::Schema.define(:version => 20110414163140) do
   create_table "essence_texts", :force => true do |t|
     t.text     "body"
     t.string   "link"
-    t.string   "title"
+    t.string   "link_title"
     t.string   "link_class_name"
     t.boolean  "public",                  :default => false
     t.boolean  "do_not_index",            :default => false

@@ -7,4 +7,3 @@ uploads/**/*
 public/javascripts/alchemy
 public/stylesheets/alchemy
 public/images/alchemy
-db/migrate
