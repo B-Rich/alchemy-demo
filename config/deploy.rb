@@ -19,6 +19,12 @@ ssh_options[:port] = 12312
 
 after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
 
+# Custom tasks
+
+after "deploy:symlink", "deploy:db:symlink"
+before "deploy:restart", "deploy:migrate"
+before "deploy:restart", "deploy:seed"
+
 # Alchemy recipes from vendor/plugins/alchemy/recipes/alchemy_capistrano_tasks.rb
 
 before "deploy:restart", "alchemy:db:migrate"
@@ -26,12 +32,6 @@ before "deploy:restart", "alchemy:assets:copy"
 
 after "deploy:setup", "alchemy:shared_folders:create"
 after "deploy:symlink", "alchemy:shared_folders:symlink"
-
-# Custom tasks
-
-after "deploy:symlink", "deploy:db:symlink"
-before "deploy:restart", "deploy:migrate"
-before "deploy:restart", "deploy:seed"
 
 after "deploy", "deploy:cleanup"
 
