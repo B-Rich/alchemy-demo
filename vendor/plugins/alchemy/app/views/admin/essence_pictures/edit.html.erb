@@ -24,12 +24,12 @@
     <%# Have to use a Hash here, because Rails has a Hash.to_params bug with nested Arrays!!!! %>
     <%- if @options[:sizes].is_a?(HashWithIndifferentAccess) -%>
     <tr>
-      <td class="label"><%= f.label "render_size" %></td>
+      <td class="label"><%= f.label "render_size", _("Size") %></td>
       <td>
       <%= f.select(
         "render_size",
         options_for_select(
-          [[_('Layout default'), @options[:default_size]]] + @options[:sizes].sort,
+          [[_('Layout default'), @options[:image_size]]] + @options[:sizes].sort,
           @essence_picture.render_size
         )
       ) %>
