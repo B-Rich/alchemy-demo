@@ -7,3 +7,7 @@ uploads/**/*
 public/javascripts/alchemy
 public/stylesheets/alchemy
 public/images/alchemy
+
+log/*
+/public/pictures/
+/tmp/
