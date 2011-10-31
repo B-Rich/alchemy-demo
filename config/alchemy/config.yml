@@ -1,3 +1,5 @@
+# encoding: UTF-8
+# 
 # = Configuration
 #
 # == This is the global Alchemy configuration file
@@ -24,7 +26,7 @@
 
 # === Pagecaching
 # Enable/Disable pagecaching globally.
-# Hint: You can enable/disable page caching for single PageLayouts in the page_layout.yml file.
+# Hint: You can enable/disable page caching for single Alchemy::PageLayouts in the page_layout.yml file.
 :cache_pages: true
 
 # === Sitemap
@@ -69,32 +71,33 @@ default_language:
   frontpage_name: Intro
 
 # === Mailer Settings:
+# 
 # To send Mails via contact forms you can create your form fields here and set which fields are to be validated.
+# 
 # ==== Options:
+# 
 # fields: An Array from Hashes with fieldname as keys and type as values. Types are ActiveRecord column types (i.e. string, text, boolean, etc.).
 # validate_fields: A Hash with fieldname as key and a Hash (with :message as key and a message_id as value) as value
 # 
-# The message_id is passed through I18n.t so you can translate it in your language yml file:
+# ==== Translating validation messages:
+# 
+# The message_id is passed through I18n.t so you can translate it in your language yml file.
+# 
+# Example:
 # 
 #   de:  
-#     contactform:
-#       validations:
-#         message_id: Translation
+#     alchemy:
+#      contactform:
+#         validations:
+#           enter_name: 'Bitte geben Sie einen Namen an'
 # 
 :mailer:
   :page_layout_name: contact
   :forward_to_page: false
   :mail_success_page: thanks
-  :fields:
-    - salutation: string
-    - firstname: string
-    - lastname: string
-    - address: string
-    - zip: string
-    - city: string
-    - phone: string
-    - email: string
-    - message: text
+  :mail_from: demo@alchemy-cms.com
+  :mail_to: demo@alchemy-cms.com
+  :fields: [salutation, firstname, lastname, address, zip, city, phone, email, message]
   :validate_fields:
     :lastname:
       :message: enter_name
@@ -105,112 +108,32 @@ default_language:
 # You can add own user roles. To set permissions for this roles please add an authorization_rules.rb file in your config folder.
 # Further documentation for the auth system used please visit:
 # https://github.com/stffn/declarative_authorization/blob/master/README.rdoc
+# 
+# ==== Translating Userroles
+# Userroles can be translated inside your the language yml file under:
+#   alchemy:
+#     user_roles:
+#       rolename: Name of the role
 :user_roles: [registered, author, editor, admin]
 
 # === Uploader Settings
+# Set an upload limit in megabytes which counts for all uploads together.
+# Set a file size limit in megabytes for a per file limit.
 # Allow filetypes to upload.
 # Pass * to allow all kind of files.
 :uploader:
+  :upload_limit: 50
+  :file_size_limit: 10
   :allowed_filetypes:
     :pictures: [jpg, jpeg, gif, png, psd, pdf]
-    :attachments: [*]
+    :attachments: ['*']
 
-# == Alchemy plugin configuration
-# To render the mainnavigation we split Alchemy into three plugins.
-# To make an own plugin just make a new folder in vendor/plugins and put an init.rb file in it and a config
-# folder with a Alchemy folder in it. Place a config.yml in this Alchemy folder.
-#
-# vendor/plugins/MY_PLUGIN_NAME/init.rb
-# vendor/plugins/MY_PLUGIN_NAME/config/alchemy/config.yml
-#
-# Example config.yml
+# === Link Target Options
+# Values for the link target selectbox inside the page link overlay.
+# The value gets attached as a data-link-target attribute to the link.
 # 
-# name: PLUGIN_NAME
-# settings: PUT SOME SETTINGS HERE
-# preview_frame: IF YOU WANT TO USE THE ALCHEMY PREVIEW FRAME!
-# navigation:
-#   name: NAME IN ALCHEMY NAVIGATION
-#   controller: controller_name
-#   action: action_of_controller
-#   image: /plugin_assets/PLUGIN_NAME/images/NAVIGATION_IMAGE.png
-#   sub_navigation:
-#     - name: subnavigation_entry
-#       controller: controller_name
-#       action: action_of_controller
-#     - name: subnavigation_entry
-#       controller: controller_name
-#       action: action_of_controller
-#     - name: subnavigation_entry
-#       controller: controller_name
-#       action: action_of_controller
-
-alchemy_plugins:
-
-  - name: dashboard
-    navigation:
-      name: 'home'
-      controller: admin
-      action: index
-      icon: home
-      sub_navigation:
-        - name: 'home'
-          controller: admin
-          action: index
-    
-  - name: pages
-    preview_frame:
-      controller: 'admin/pages'
-      action: edit
-      target_controller: 'admin/pages'
-      target_action: preview
-    navigation:
-      name: 'module: pages'
-      controller: 'admin/pages'
-      action: index
-      icon: pages
-      sub_navigation:
-        - name: 'module: pages'
-          controller: 'admin/pages'
-          action: index
-        - name: 'module: layoutpages'
-          controller: 'admin/pages'
-          action: layoutpages
-      nested:
-        - controller: 'admin/pages'
-          action: edit
-
-  - name: languages
-    navigation:
-      name: 'module: languages'
-      controller: 'admin/languages'
-      action: index
-      icon: languages
-      sub_navigation:
-        - name: 'module: languages'
-          controller: 'admin/languages'
-          action: index
-
-  - name: users
-    navigation:
-      name: 'module: users'
-      controller: 'admin/users'
-      action: index
-      icon: users
-      sub_navigation:
-        - name: 'module: users'
-          controller: 'admin/users'
-          action: index
-        
-  - name: archive
-    navigation:
-      controller: 'admin/pictures'
-      action: index
-      name: 'module: library'
-      icon: library
-      sub_navigation:
-        - name: 'module: images'
-          controller: 'admin/pictures'
-          action: index
-        - name: 'module: attachments'
-          controller: 'admin/attachments'
-          action: index
+# == Example:
+# Open all links set to overlay inside an jQuery UI Dialog Window.
+# 
+#   jQuery(a[data-link-target="overlay"]).dialog();
+:link_target_options: [blank]
