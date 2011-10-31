@@ -1,3 +1,6 @@
+require 'bundler/capistrano'
+require 'alchemy/capistrano'
+
 set :application, "alchemy-demo"
 set :repository,  "git://github.com/magiclabs/#{application}.git"
 
@@ -18,14 +21,10 @@ set :deploy_to, "/var/www/#{user}/html/#{application}"
 ssh_options[:port] = 12312
 
 after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
-after "deploy:setup", "alchemy:shared_folders:create"
 
 after "deploy:symlink", "deploy:db:symlink"
-after "deploy:symlink", "alchemy:shared_folders:symlink"
 
 before "deploy:restart", "deploy:migrate"
-before "deploy:restart", "alchemy:db:migrate"
-before "deploy:restart", "alchemy:assets:copy"
 before "deploy:restart", "deploy:seed"
 
 after "deploy", "deploy:cleanup"

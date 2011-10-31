@@ -6,12 +6,12 @@ Source for the live demo of Alchemy CMS.
 Watch it live:
 --------------
 
-<http://demo.alchemy-app.com>
+<http://demo.alchemy-cms.com>
 
 Admin Login:
 ------------
 
-<http://demo.alchemy-app.com/admin>
+<http://demo.alchemy-cms.com/admin>
 
 Credentials:
 ------------
@@ -23,4 +23,4 @@ Password: demo
 Download Alchemy:
 -----------------
 
-<https://github.com/magiclabs/alchemy/>
+<https://github.com/magiclabs/alchemy_cms/>
