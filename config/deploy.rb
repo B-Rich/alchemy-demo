@@ -24,7 +24,7 @@ after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
 
 after "deploy:symlink", "deploy:db:symlink"
 
-before "deploy:restart", "deploy:migrate"
+before "deploy:restart", "deploy:load_schema"
 before "deploy:restart", "deploy:seed"
 
 after "deploy", "deploy:cleanup"
