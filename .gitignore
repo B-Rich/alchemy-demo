@@ -8,3 +8,5 @@ public/javascripts/alchemy
 public/stylesheets/alchemy
 public/images/alchemy
 public/pictures/
+
+db/migrate/

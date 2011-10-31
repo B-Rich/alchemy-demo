@@ -1,15 +1,16 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110707193318) do
+ActiveRecord::Schema.define(:version => 20110919110451) do
 
   create_table "attachments", :force => true do |t|
     t.string   "name"
@@ -122,13 +123,14 @@ ActiveRecord::Schema.define(:version => 20110707193318) do
     t.string   "link_class_name"
     t.string   "link_title"
     t.string   "css_class"
-    t.boolean  "open_link_in_new_window", :default => false
+    t.string   "link_target"
     t.integer  "creator_id"
     t.integer  "updater_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "crop_from"
     t.string   "crop_size"
+    t.string   "render_size"
   end
 
   create_table "essence_richtexts", :force => true do |t|
@@ -147,9 +149,9 @@ ActiveRecord::Schema.define(:version => 20110707193318) do
     t.string   "link"
     t.string   "link_title"
     t.string   "link_class_name"
-    t.boolean  "public",                  :default => false
-    t.boolean  "do_not_index",            :default => false
-    t.boolean  "open_link_in_new_window", :default => false
+    t.boolean  "public",          :default => false
+    t.boolean  "do_not_index",    :default => false
+    t.string   "link_target"
     t.integer  "creator_id"
     t.integer  "updater_id"
     t.datetime "created_at"
@@ -240,20 +242,20 @@ ActiveRecord::Schema.define(:version => 20110707193318) do
     t.string   "login"
     t.string   "email"
     t.string   "gender"
-    t.string   "role"
+    t.string   "role",                               :default => "registered"
     t.string   "language"
-    t.string   "crypted_password",    :limit => 128, :default => "", :null => false
-    t.string   "password_salt",       :limit => 128, :default => "", :null => false
-    t.integer  "login_count",                        :default => 0,  :null => false
-    t.integer  "failed_login_count",                 :default => 0,  :null => false
+    t.string   "crypted_password",    :limit => 128, :default => "",           :null => false
+    t.string   "password_salt",       :limit => 128, :default => "",           :null => false
+    t.integer  "login_count",                        :default => 0,            :null => false
+    t.integer  "failed_login_count",                 :default => 0,            :null => false
     t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
     t.string   "current_login_ip"
     t.string   "last_login_ip"
-    t.string   "persistence_token",                                  :null => false
-    t.string   "single_access_token",                                :null => false
-    t.string   "perishable_token",                                   :null => false
+    t.string   "persistence_token",                                            :null => false
+    t.string   "single_access_token",                                          :null => false
+    t.string   "perishable_token",                                             :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "creator_id"
