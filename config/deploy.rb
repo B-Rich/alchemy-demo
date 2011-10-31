@@ -24,7 +24,7 @@ after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
 
 after "deploy:symlink", "deploy:db:symlink"
 
-before "deploy:restart", "deploy:load_schema"
+before "deploy:restart", "deploy:migrate"
 before "deploy:restart", "deploy:seed"
 
 after "deploy", "deploy:cleanup"
@@ -52,7 +52,7 @@ namespace :deploy do
   
   desc 'Seeds the database'
   task :seed, :roles => :app, :except => { :no_release => true } do
-    run "cd #{release_path} && RAILS_ENV=production rake db:seed"
+    run "cd #{release_path} && RAILS_ENV=production #{rake} db:seed"
   end
   
   namespace :db do
@@ -77,7 +77,7 @@ namespace :deploy do
       
       default_template = <<-EOF
       production:
-        adapter: mysql
+        adapter: mysql2
         encoding: utf8
         reconnect: false
         pool: 5
@@ -101,6 +101,12 @@ namespace :deploy do
     DESC
     task :symlink, :except => { :no_release => true } do
       run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml" 
+    end
+    
+    desc "dumps the current database into backup"
+    task :dump do
+      db_name = Capistrano::CLI.ui.ask("Database name: ")
+      run "mysqldump -u#{Capistrano::CLI.ui.ask("Database username: ")} -p#{Capistrano::CLI.ui.ask("Database password: ")} #{db_name} > ~/files/#{db_name}.sql"
     end
     
   end
