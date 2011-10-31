@@ -1,5 +1,7 @@
-PATH
-  remote: /Users/tvd/code/ruby/gems/alchemy_cms
+GIT
+  remote: git://github.com/magiclabs/alchemy_cms.git
+  revision: a04df11ddebdadf0dfdcc34ed2334484e5decc2e
+  branch: next_stable
   specs:
     alchemy_cms (2.0.rc6)
       acts_as_ferret (~> 0.5)
@@ -164,7 +166,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  alchemy_cms (>= 2.0.rc5)!
+  alchemy_cms (>= 2.0.rc6)!
   capistrano
   mysql2 (~> 0.2.11)
   rails (= 3.0.10)
