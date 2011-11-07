@@ -10,7 +10,7 @@ namespace :demo do
 		
 		
 		# read backup into database
-		system `mysql -u#{username} -p#{password} #{} < /var/www/#{username}/files/#{database}.sql`
+		system `mysql -u#{username} -p#{password} #{database} < /var/www/#{username}/files/#{database}.sql`
 		
 		# copy backup upload-files into working-directory
 		system `cp -Rf /var/www/#{username}/files/uploads /var/www/#{username}/html/alchemy-demo/shared/`
