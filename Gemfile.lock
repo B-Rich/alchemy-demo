@@ -32,7 +32,7 @@ GEM
       jk-ferret (>= 0.11.8)
       rails (>= 3.0)
     acts_as_list (0.1.4)
-    alchemy_cms (2.0.2)
+    alchemy_cms (2.0.3)
       acts_as_ferret (~> 0.5)
       acts_as_list (~> 0.1)
       attachment_magic (~> 0.1.1)
@@ -148,7 +148,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tvdeyen-fleximage (1.0.8)
+    tvdeyen-fleximage (1.0.9)
       aws-s3
       rmagick
     tzinfo (0.3.31)
