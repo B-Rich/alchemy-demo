@@ -22,7 +22,7 @@ ssh_options[:port] = 12312
 
 after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
 before "deploy:start", "deploy:seed"
-after "deploy:symlink", "deploy:db:symlink"
+after "deploy:assets:symlink", "deploy:db:symlink"
 before "deploy:restart", "deploy:migrate"
 after "deploy", "deploy:cleanup"
 
