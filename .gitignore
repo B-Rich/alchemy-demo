@@ -8,6 +8,7 @@ public/javascripts/alchemy
 public/stylesheets/alchemy
 public/images/alchemy
 public/pictures/
+public/assets/
 
 db/migrate/
 public/javascripts/tinymce_hammer.js

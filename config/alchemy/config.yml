@@ -10,7 +10,7 @@
 
 # The amount of time of inactivity in minutes after which the user is kicked out of his current session.
 # Only active in production environment!!!
-:auto_logout_time: 15
+:auto_logout_time: 30
 
 # === Redirect options
 # redirect_index: You can set to redirect (an 301 permanent, for all you SEO geeks ^_^) to first child page (typically the homepage) the index/intro page if it's not visible.
@@ -39,6 +39,16 @@
   :show_root: true
   :show_flag: false
 
+# === URL nesting
+# By default Alchemy does not nest page urls respectivley to their page tree position.
+# Enable +url_nesting+ to get nested urls.
+# ==== Example of a nested url:
+# +http://homepage.com/company/history/the-early-years+
+# Alchemy supports url nesting up to three levels deep. We think that's more then enough,
+# because URLs like this are possible:
+# +http://homepage.com/en/2011/12/08/my-post
+url_nesting: false
+
 # === Picture rendering settings
 # Alchemy uses Fleximage and RMagick to render images. Use {:image_size => "XXXxYYY", :crop => BOOLEAN [true]} to resize images.
 # See https://github.com/Squeegy/fleximage for further infos.
@@ -51,22 +61,12 @@
 :output_image_jpg_quality: 85
 :preprocess_image_resize: 1000x1000
 :image_store_format: png
-:image_output_format: png
+:image_output_format: jpg
 
-# Set available translations for your customers.
-# Currently available translations are German and English.
-:translations:
-  - :language_code: de
-    :language: Deutsch
-  - :language_code: en
-    :language: English
-
-default_translation: en
-
-# Default language for your homepgae.
+# Default language for the seeder.
 default_language:
-  code: en
-  name: English
+  code: de
+  name: Deutsch
   page_layout: intro
   frontpage_name: Intro
 
@@ -81,7 +81,7 @@ default_language:
 # 
 # ==== Translating validation messages:
 # 
-# The message_id is passed through I18n.t so you can translate it in your language yml file.
+# The message_id is passed through Alchemy::I18n.t so you can translate it in your language yml file.
 # 
 # Example:
 # 
@@ -95,8 +95,8 @@ default_language:
   :page_layout_name: contact
   :forward_to_page: false
   :mail_success_page: thanks
-  :mail_from: demo@alchemy-cms.com
-  :mail_to: demo@alchemy-cms.com
+  :mail_from: your.mail@your-domain.com
+  :mail_to: your.mail@your-domain.com
   :fields: [salutation, firstname, lastname, address, zip, city, phone, email, message]
   :validate_fields:
     :lastname:
@@ -117,13 +117,13 @@ default_language:
 :user_roles: [registered, author, editor, admin]
 
 # === Uploader Settings
-# Set an upload limit in megabytes which counts for all uploads together.
-# Set a file size limit in megabytes for a per file limit.
+#   upload_limit: Integer       Set an amount of files upload limit of files which can be uploaded at once. Set 0 for unlimited.
+#   file_size_limit: Integer    Set a file size limit in megabytes for a per file limit.
 # Allow filetypes to upload.
 # Pass * to allow all kind of files.
 :uploader:
   :upload_limit: 50
-  :file_size_limit: 10
+  :file_size_limit: 100
   :allowed_filetypes:
     :pictures: [jpg, jpeg, gif, png, psd, pdf]
     :attachments: ['*']

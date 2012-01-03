@@ -1,11 +1,11 @@
-require 'bundler/capistrano'
-require 'alchemy/capistrano'
+require "bundler/capistrano"
+require "alchemy/capistrano"
+load 'deploy/assets'
 
 set :application, "alchemy-demo"
 set :repository,  "git://github.com/magiclabs/#{application}.git"
 
 set :scm, :git
-
 set :deploy_via, :remote_cache
 set :copy_exclude, [".svn", ".DS_Store"]
 
@@ -21,12 +21,9 @@ set :deploy_to, "/var/www/#{user}/html/#{application}"
 ssh_options[:port] = 12312
 
 after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
-
+before "deploy:start", "deploy:seed"
 after "deploy:symlink", "deploy:db:symlink"
-
 before "deploy:restart", "deploy:migrate"
-before "deploy:restart", "deploy:seed"
-
 after "deploy", "deploy:cleanup"
 
 namespace :logs do
