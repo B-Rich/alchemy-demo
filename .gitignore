@@ -4,11 +4,8 @@ log/*.log
 tmp/**/*
 index
 uploads/**/*
-public/javascripts/alchemy
-public/stylesheets/alchemy
-public/images/alchemy
 public/pictures/
 public/assets/
 
-public/javascripts/tinymce_hammer.js
 alchemy_cms
+db/*.sql

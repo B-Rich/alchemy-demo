@@ -5,6 +5,3 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
-
-# Seeding Alchemy data
-Alchemy::Seeder.seed!

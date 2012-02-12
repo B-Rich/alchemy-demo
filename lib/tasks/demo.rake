@@ -6,17 +6,25 @@ namespace :demo do
 		password = mysql_config['password']
 		database = mysql_config['database']
 		
-		# set maintanance notice
+		# TODO: set maintenance notice
 		
-		
+		# recreate database
+		Rake::Task['db:drop'].invoke
+		Rake::Task['db:create'].invoke
 		# read backup into database
 		system `mysql -u#{username} -p#{password} #{database} < /var/www/#{username}/files/#{database}.sql`
 		
+		# delete all uploaded files
+		system `rm -Rf /var/www/#{username}/html/alchemy-demo/shared/*`
 		# copy backup upload-files into working-directory
 		system `cp -Rf /var/www/#{username}/files/uploads /var/www/#{username}/html/alchemy-demo/shared/`
 		
 		# clear cache
 		Rake::Task['tmp:cache:clear'].invoke
+		system `rm -Rf /var/www/#{username}/html/alchemy-demo/current/public/pictures/*`
+
+		# Reindex the text search
+		Rake::Task['ferret:rebuild_index'].invoke
 	end
 	
 end

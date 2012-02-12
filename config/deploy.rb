@@ -47,60 +47,9 @@ namespace :deploy do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
   
-  desc 'Seeds the database'
-  task :seed, :roles => :app, :except => { :no_release => true } do
-    run "cd #{release_path} && RAILS_ENV=production #{rake} db:seed"
-  end
-  
   namespace :db do
     
-    desc <<-DESC
-      Creates the database.yml configuration file in shared path.
-
-      By default, this task uses a template unless a template \
-      called database.yml.erb is found either is :template_dir \
-      or /config/deploy folders. The default template matches \
-      the template for config/database.yml file shipped with Rails.
-
-      When this recipe is loaded, db:setup is automatically configured \
-      to be invoked after deploy:setup. You can skip this task setting \
-      the variable :skip_db_setup to true. This is especially useful \ 
-      if you are using this recipe in combination with \
-      capistrano-ext/multistaging to avoid multiple db:setup calls \ 
-      when running deploy:setup for all stages one by one.
-    DESC
-    
-    task :setup, :except => { :no_release => true } do
-      
-      default_template = <<-EOF
-      production:
-        adapter: mysql2
-        encoding: utf8
-        reconnect: false
-        pool: 5
-        database: #{ Capistrano::CLI.ui.ask("Database name: ") }
-        username: #{ Capistrano::CLI.ui.ask("Database username: ") }
-        password: #{ Capistrano::CLI.ui.ask("Database password: ") }
-        socket: #{ Capistrano::CLI.ui.ask("Database socket: ") }
-      EOF
-      
-      location = fetch(:template_dir, "config/deploy") + '/database.yml.erb'
-      template = File.file?(location) ? File.read(location) : default_template
-      
-      config = ERB.new(template)
-      
-      run "mkdir -p #{shared_path}/config" 
-      put config.result(binding), "#{shared_path}/config/database.yml"
-    end
-    
-    desc <<-DESC
-      [internal] Updates the symlink for database.yml file to the just deployed release.
-    DESC
-    task :symlink, :except => { :no_release => true } do
-      run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml" 
-    end
-    
-    desc "dumps the current database into backup"
+    desc "[internal] Backups the current database"
     task :dump do
       db_name = Capistrano::CLI.ui.ask("Database name: ")
       run "mysqldump -u#{Capistrano::CLI.ui.ask("Database username: ")} -p#{Capistrano::CLI.ui.ask("Database password: ")} #{db_name} > ~/files/#{db_name}.sql"
