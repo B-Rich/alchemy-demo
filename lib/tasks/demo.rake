@@ -6,8 +6,9 @@ namespace :demo do
 		password = mysql_config['password']
 		database = mysql_config['database']
 		
-		# TODO: set maintenance notice
-		
+		# Set maintenance notice
+		system `echo "<h1>We are doing maintenance. Please stay tuned</h1>" > /var/www/#{username}/html/alchemy-demo/shared/system/maintenance.html`
+
 		# recreate database
 		Rake::Task['db:drop'].invoke
 		Rake::Task['db:create'].invoke
@@ -27,6 +28,7 @@ namespace :demo do
 		Rake::Task['ferret:rebuild_index'].invoke
 
 		# Restart the application
+		system `rm /var/www/#{username}/html/alchemy-demo/shared/system/maintenance.html`
 		system `touch /var/www/#{username}/html/alchemy-demo/current/tmp/restart.txt`
 	end
 	
