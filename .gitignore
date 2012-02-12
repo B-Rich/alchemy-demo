@@ -9,3 +9,4 @@ public/assets/
 
 alchemy_cms
 db/*.sql
+.rvmrc
