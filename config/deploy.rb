@@ -20,23 +20,13 @@ role :db,  "rv2.nethosting4you-server.de", :primary => true
 set :deploy_to, "/var/www/#{user}/html/#{application}"
 ssh_options[:port] = 12312
 
-after "deploy:setup", "deploy:db:setup" unless fetch(:skip_db_setup, false)
+after "deploy:setup", "alchemy:database_yml:create"
+after "deploy:assets:symlink", "alchemy:database_yml:symlink"
+
 before "deploy:start", "deploy:seed"
-after "deploy:assets:symlink", "deploy:db:symlink"
 before "deploy:restart", "deploy:migrate"
+
 after "deploy", "deploy:cleanup"
-
-namespace :logs do
-  desc "show last 100 lines of production.log"
-  task :tail do
-    run "tail -n100 #{shared_path}/log/production.log"
-  end
-
-  desc "watch tail of production.log and wait for additional data to be appended to the input"
-  task :watch do
-    stream("tail -f #{shared_path}/log/production.log")
-  end
-end
 
 namespace :deploy do
   
