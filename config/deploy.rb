@@ -36,7 +36,17 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
-  
+
+  namespace :web do
+    task :disable, :roles => :web do
+      on_rollback { delete "#{shared_path}/system/maintenance.html" }
+      require 'erb'
+      deadline, reason = ENV['UNTIL'], ENV['REASON']
+      maintenance = "<h1>Server maintenance.</h1><h2>We will be back soon.</h2><p>Please wait...</p>"
+      put maintenance, "#{shared_path}/system/maintenance.html", :mode => 0644
+    end
+  end
+
   namespace :db do
     
     desc "[internal] Backups the current database"

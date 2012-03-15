@@ -1,9 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.3'
 gem 'mysql2', '~> 0.3.7'
 gem 'alchemy_cms', :git => 'git://github.com/magiclabs/alchemy_cms'
-#gem 'alchemy_cms', :path => '../alchemy-cms/alchemy_cms'
+# gem 'alchemy_cms', :path => '../../ruby/gems/alchemy_cms'
 
 group :development do
   #gem 'mongrel'
