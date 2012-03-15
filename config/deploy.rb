@@ -58,3 +58,6 @@ namespace :deploy do
   end
   
 end
+
+before "deploy", "deploy:web:disable"
+after "deploy", "deploy:web:enable"
