@@ -114,7 +114,7 @@ default_language:
 #   alchemy:
 #     user_roles:
 #       rolename: Name of the role
-:user_roles: [registered, author, editor, admin]
+:user_roles: [registered, author, editor, admin, demo]
 
 # === Uploader Settings
 #   upload_limit: Integer       Set an amount of files upload limit of files which can be uploaded at once. Set 0 for unlimited.
