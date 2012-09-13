@@ -20,7 +20,7 @@ AlchemyDemo::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
-  # Defaults to Rails.root.join("public/assets")
+  # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH
 
   # Specifies the header that your server uses for sending files
@@ -33,8 +33,11 @@ AlchemyDemo::Application.configure do
   # See everything in the log (default is :info)
   # config.log_level = :debug
 
+  # Prepend all log lines with the following tags
+  # config.log_tags = [ :subdomain, :uuid ]
+
   # Use a different logger for distributed setups
-  # config.logger = SyslogLogger.new
+  # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
@@ -43,10 +46,11 @@ AlchemyDemo::Application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( alchemy/standard_set.css )
+  # config.assets.precompile += %w( search.js )
 
   # Disable delivery errors, bad email addresses will be ignored
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :test
 
   # Enable threaded mode
   # config.threadsafe!
@@ -57,7 +61,8 @@ AlchemyDemo::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
-  
-  config.action_mailer.delivery_method = :sendmail
 
+  # Log the query plan for queries taking more than this (works
+  # with SQLite, MySQL, and PostgreSQL)
+  # config.active_record.auto_explain_threshold_in_seconds = 0.5
 end
