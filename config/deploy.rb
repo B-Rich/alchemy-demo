@@ -1,63 +1,74 @@
-require "bundler/capistrano"
-require "alchemy/capistrano"
+require 'bundler/capistrano'
+require 'alchemy/capistrano'
 load 'deploy/assets'
 
-set :application, "alchemy-demo"
-set :repository,  "git://github.com/magiclabs/#{application}.git"
+# ssh settings
+set :user,                      "rails2"
+set :ssh_options,               { :forward_agent => true }
+ssh_options[:keys] =            [File.join(ENV["HOME"], ".ssh", "id_rsa")]
+default_run_options[:pty] =     true
 
-set :scm, :git
-set :deploy_via, :remote_cache
-set :copy_exclude, [".svn", ".DS_Store"]
+# domain names
+role :app,                      "server1904.railsvserver.de"
+role :web,                      "server1904.railsvserver.de"
+role :db,                       "server1904.railsvserver.de", :primary => true
 
-set(:user) { Capistrano::CLI.ui.ask("Type in the ssh username: ") }
-set(:password) { Capistrano::CLI.password_prompt("Type in the password for #{user}: ") }
-set :use_sudo, false
+# the webserver path
+set :deploy_to,                 "/var/www/alchemy-demo"
 
-role :web, "rv2.nethosting4you-server.de"
-role :app, "rv2.nethosting4you-server.de"
-role :db,  "rv2.nethosting4you-server.de", :primary => true
+# repository settings
+set :scm,                       "git"
+set :repository,                "git://github.com/magiclabs/alchemy-demo.git"
+set :branch,                    "master"
 
-set :deploy_to, "/var/www/#{user}/html/#{application}"
-ssh_options[:port] = 12312
+# before hooks
+before "deploy",                "deploy:web:disable"
+before "deploy:start",          "deploy:seed"
+before "deploy:create_symlink", "deploy:migrate"
 
-after "deploy:setup", "alchemy:database_yml:create"
-after "deploy:assets:symlink", "alchemy:database_yml:symlink"
+# after hooks
+after "deploy:setup",           "alchemy:database_yml:create"
+after "deploy:assets:symlink",  "alchemy:database_yml:symlink"
+after "deploy",                 "deploy:cleanup"
+after "deploy",                 "deploy:web:enable"
 
-before "deploy:start", "deploy:seed"
-before "deploy:restart", "deploy:migrate"
+# special tasks
 
-after "deploy", "deploy:cleanup"
+namespace :logs do
+  desc "show last 100 lines of log"
+  task :tail do
+    run "tail -n100 #{shared_path}/log/#{rails_env}.log"
+  end
+
+  desc "watch tail of log and wait for additional data to be appended to the input"
+  task :watch do
+    stream("tail -f #{shared_path}/log/#{rails_env}.log")
+  end
+end
 
 namespace :deploy do
-  
+
   task :start do ; end
   task :stop do ; end
-  
+
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
 
-  namespace :web do
-    task :disable, :roles => :web do
-      on_rollback { delete "#{shared_path}/system/maintenance.html" }
-      require 'erb'
-      deadline, reason = ENV['UNTIL'], ENV['REASON']
-      maintenance = "<h1>Server maintenance.</h1><h2>We will be back soon.</h2><p>Please wait...</p>"
-      put maintenance, "#{shared_path}/system/maintenance.html", :mode => 0644
-    end
+  desc 'Seeds the database'
+  task :seed, :roles => :app, :except => { :no_release => true } do
+    run "cd #{release_path} && RAILS_ENV=#{rails_env} #{rake} db:seed"
   end
 
-  namespace :db do
-    
-    desc "[internal] Backups the current database"
-    task :dump do
-      db_name = Capistrano::CLI.ui.ask("Database name: ")
-      run "mysqldump -u#{Capistrano::CLI.ui.ask("Database username: ")} -p#{Capistrano::CLI.ui.ask("Database password: ")} #{db_name} > ~/files/#{db_name}.sql"
-    end
-    
-  end
-  
 end
 
-before "deploy", "deploy:web:disable"
-after "deploy", "deploy:web:enable"
+## defaults
+
+# rails env
+set :rails_env,                 "production"
+
+# enable bundler binstubs
+set :bundle_flags,              "--deployment --binstubs"
+
+# do not use sudo
+set :use_sudo,                  false
