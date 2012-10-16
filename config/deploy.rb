@@ -24,6 +24,7 @@ set :branch,                    "master"
 # before hooks
 before "deploy",                "deploy:web:disable"
 before "deploy:start",          "deploy:seed"
+before "deploy:create_symlink", "demo:reset"
 before "deploy:create_symlink", "deploy:migrate"
 
 # after hooks
@@ -58,6 +59,15 @@ namespace :deploy do
   desc 'Seeds the database'
   task :seed, :roles => :app, :except => { :no_release => true } do
     run "cd #{release_path} && RAILS_ENV=#{rails_env} #{rake} db:seed"
+  end
+
+end
+
+namespace :demo do
+
+  desc 'Resets the database to default demo content'
+  task :reset do
+    run "cd #{release_path} && RAILS_ENV=#{rails_env} #{rake} demo:reset"
   end
 
 end
