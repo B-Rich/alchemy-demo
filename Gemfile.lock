@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/magiclabs/alchemy-demo_kit.git
-  revision: 740bfc00c0b7633923c6beffc30d339a0d076e16
+  revision: 813913dffe2b707ea43e4f991fdd16b8adf8e940
   branch: master
   specs:
     alchemy-demo_kit (0.0.1)
