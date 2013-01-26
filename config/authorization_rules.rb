@@ -1,5 +1,5 @@
 authorization do
-  
+
   role :demo do
     includes :guest
     has_permission_on :alchemy_pages, :to => [:show] do
@@ -23,6 +23,7 @@ authorization do
     has_permission_on :alchemy_admin_pages, :to => [:manage_pages]
     has_permission_on :alchemy_admin_layoutpages, :to => [:index]
     has_permission_on :alchemy_admin_languages, :to => [:manage]
+    has_permission_on :alchemy_admin_tags, :to => [:manage]
   end
-  
+
 end
