@@ -9,6 +9,7 @@ gem 'rails', '~> 3.2.12'
 gem 'mysql2'
 gem 'alchemy_cms', github: 'magiclabs/alchemy_cms', branch: '2.6-stable'
 gem 'alchemy-demo_kit', github: 'magiclabs/alchemy-demo_kit', branch: 'master'
+gem 'airbrake'
 
 group :development do
   gem 'debugger'
