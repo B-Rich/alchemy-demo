@@ -1,13 +1,13 @@
 # encoding: UTF-8
 #
-# = Configuration
-#
 # == This is the global Alchemy configuration file
 #
-# Please override your apps settings in your config/alchemy/config.yml file.
-# You can use a handy rake task to generate it.
+
+# === Require SSL for login form and all admin modules
 #
-#   rake alchemy:app_structure:create:config
+# NOTE: You have to create a SSL certificate on your server to make this work
+#
+require_ssl: false
 
 # === Auto Log Out Time
 #

@@ -7,11 +7,11 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 3.2.12'
 gem 'mysql2'
-gem 'alchemy_cms', github: 'magiclabs/alchemy_cms', branch: '2.5-stable'
+gem 'alchemy_cms', github: 'magiclabs/alchemy_cms', branch: '2.6-stable'
 gem 'alchemy-demo_kit', github: 'magiclabs/alchemy-demo_kit', branch: 'master'
 
 group :development do
-  gem 'debugger',   :platforms => :ruby_19
+  gem 'debugger'
   gem 'capistrano'
   gem 'capistrano-maintenance'
 end
