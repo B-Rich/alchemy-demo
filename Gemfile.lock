@@ -1,17 +1,17 @@
 GIT
   remote: git://github.com/magiclabs/alchemy-demo_kit.git
-  revision: 626f75ff8ee13296f841bb4059e6cd001a51e045
+  revision: f1933a6f9972b3b2cf05005a163070b1a92cd289
   branch: master
   specs:
-    alchemy-demo_kit (2.6.0.rc5)
-      alchemy_cms (= 2.6.0.rc5)
+    alchemy-demo_kit (2.6.0)
+      alchemy_cms (= 2.6.0)
 
 GIT
   remote: git://github.com/magiclabs/alchemy_cms.git
-  revision: c610370656525176af5278a399950d17c5c5bb38
+  revision: ae057d5c3c9a3d31752fcc07cdf36ae3e374e118
   branch: 2.6-stable
   specs:
-    alchemy_cms (2.6.0.rc5)
+    alchemy_cms (2.6.0)
       acts-as-taggable-on (~> 2.1)
       acts_as_ferret (~> 0.5)
       acts_as_list (~> 0.2.0)
@@ -63,8 +63,8 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
-    acts-as-taggable-on (2.4.0)
-      rails (~> 3.0)
+    acts-as-taggable-on (2.4.1)
+      rails (>= 3, < 5)
     acts_as_ferret (0.5.4)
       ferret (>= 0.11.8)
       rails (>= 3.0)
@@ -110,13 +110,13 @@ GEM
       debugger-ruby_core_source (>= 1.1.1)
     debugger-ruby_core_source (1.1.4)
     declarative_authorization (0.5.7)
-    devise (2.2.3)
+    devise (2.2.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (~> 3.1)
       warden (~> 1.2.1)
-    devise-encryptable (0.1.1)
-      devise (>= 2.1.0.rc)
+    devise-encryptable (0.1.2)
+      devise (>= 2.1.0)
     dragonfly (0.9.15)
       multi_json (~> 1.0)
       rack
@@ -136,14 +136,13 @@ GEM
     jquery-ui-rails (3.0.1)
       jquery-rails
       railties (>= 3.1.0)
-    json (1.7.7)
+    json (1.8.0)
     kaminari (0.14.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     libv8 (3.3.10.4)
     magiclabs-userstamp (2.0.2)
-    mail (2.5.3)
-      i18n (>= 0.4.0)
+    mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.23)
@@ -185,7 +184,7 @@ GEM
     rake (10.0.4)
     rdoc (3.12.2)
       json (~> 1.4)
-    sass (3.2.8)
+    sass (3.2.9)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -201,7 +200,7 @@ GEM
     therubyracer (0.10.2)
       libv8 (~> 3.3.10)
     thor (0.18.1)
-    tilt (1.4.0)
+    tilt (1.4.1)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
